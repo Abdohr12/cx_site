@@ -13,6 +13,7 @@ interface FooterProps {
 const linkKeys: { page: string; key: TranslationKey }[] = [
   { page: 'home', key: 'nav_home' },
   { page: 'services', key: 'nav_services' },
+  { page: 'portfolio', key: 'nav_portfolio' },
   { page: 'about', key: 'nav_about' },
   { page: 'contact', key: 'nav_contact' },
 ];

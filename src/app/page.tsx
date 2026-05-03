@@ -7,6 +7,7 @@ import Footer from '@/components/codex/Footer';
 import HomePage from '@/components/codex/HomePage';
 import ServicesPage from '@/components/codex/ServicesPage';
 import AboutPage from '@/components/codex/AboutPage';
+import PortfolioPage from '@/components/codex/PortfolioPage';
 import ContactPage from '@/components/codex/ContactPage';
 
 export default function CodexWebsite() {
@@ -25,6 +26,8 @@ export default function CodexWebsite() {
         return <ServicesPage onNavigate={handleNavigate} />;
       case 'about':
         return <AboutPage />;
+      case 'portfolio':
+        return <PortfolioPage onNavigate={handleNavigate} />;
       case 'contact':
         return <ContactPage />;
       default:

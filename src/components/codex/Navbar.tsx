@@ -15,6 +15,7 @@ interface NavbarProps {
 const navLinkKeys = [
   { id: 'home', key: 'nav_home' as const },
   { id: 'services', key: 'nav_services' as const },
+  { id: 'portfolio', key: 'nav_portfolio' as const },
   { id: 'about', key: 'nav_about' as const },
   { id: 'contact', key: 'nav_contact' as const },
 ];
