@@ -14,11 +14,8 @@ export default function CodexWebsite() {
 
   const handleNavigate = (page: string) => {
     setCurrentPage(page);
-  };
-
-  useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentPage]);
+  };
 
   const renderPage = () => {
     switch (currentPage) {
@@ -36,16 +33,16 @@ export default function CodexWebsite() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col">
       <Navbar currentPage={currentPage} onNavigate={handleNavigate} />
       <main className="flex-1">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPage}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
           >
             {renderPage()}
           </motion.div>

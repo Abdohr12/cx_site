@@ -8,7 +8,6 @@ import {
   CalendarCheck,
   BarChart3,
   Star,
-  ChevronLeft,
   ArrowLeft,
   Building2,
   GraduationCap,
@@ -20,24 +19,15 @@ interface HomePageProps {
   onNavigate: (page: string) => void;
 }
 
-function FadeInSection({
-  children,
-  className = '',
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
+function FadeIn({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-80px' });
-
+  const inView = useInView(ref, { once: true, margin: '-60px' });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-      transition={{ duration: 0.7, delay, ease: 'easeOut' }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay, ease: 'easeOut' }}
       className={className}
     >
       {children}
@@ -48,173 +38,169 @@ function FadeInSection({
 export default function HomePage({ onNavigate }: HomePageProps) {
   const features = [
     {
-      icon: <Users className="w-8 h-8 text-codex-accent" />,
+      icon: <Users className="w-7 h-7 text-[#00B0F0]" />,
       title: 'إدارة المتدربين',
-      description: 'تتبع حضور المتدربين، نقاطهم، وتقدمهم في مكان واحد. كلشي منظّم وسهل.',
+      description: 'تتبع حضور المتدربين، نقاطهم، وتقدمهم في مكان واحد. كلشي منظّم وسهل الاستخدام.',
     },
     {
-      icon: <CalendarCheck className="w-8 h-8 text-codex-accent" />,
+      icon: <CalendarCheck className="w-7 h-7 text-[#00B0F0]" />,
       title: 'الجدولة الذكية',
-      description: 'نظّم الحصص والمواعيد تلقائياً بلا تعقيد. وفّر وقتك وركّز على اللي يهمك.',
+      description: 'نظّم الحصص والمواعيد تلقائياً بلا تعقيد. وفّر وقتك وركّز على اللي يهمك فعلاً.',
     },
     {
-      icon: <BarChart3 className="w-8 h-8 text-codex-accent" />,
+      icon: <BarChart3 className="w-7 h-7 text-[#00B0F0]" />,
       title: 'تقارير مفصّلة',
       description: 'احصل على تقارير واضحة تساعدك تتخذ قرارات أحسن. إحصائيات دقيقة في الوقت الحقيقي.',
     },
   ];
 
   const trustedBy = [
-    { icon: <GraduationCap className="w-6 h-6" />, name: 'مراكز التكوين' },
-    { icon: <Building2 className="w-6 h-6" />, name: 'الشركات الناشئة' },
-    { icon: <Store className="w-6 h-6" />, name: 'المتاجر الإلكترونية' },
-    { icon: <Laptop className="w-6 h-6" />, name: 'الوكالات الرقمية' },
+    { icon: <GraduationCap className="w-5 h-5" />, name: 'مراكز التكوين' },
+    { icon: <Building2 className="w-5 h-5" />, name: 'الشركات الناشئة' },
+    { icon: <Store className="w-5 h-5" />, name: 'المتاجر الإلكترونية' },
+    { icon: <Laptop className="w-5 h-5" />, name: 'الوكالات الرقمية' },
   ];
 
   return (
-    <div className="pt-16 lg:pt-20">
-      {/* Hero Section */}
-      <section className="relative hero-gradient min-h-[90vh] flex items-center overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -left-40 w-80 h-80 bg-codex-accent/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-codex-accent/5 rounded-full blur-3xl" />
-        </div>
+    <div className="pt-[68px]">
+      {/* ===== HERO ===== */}
+      <section className="hero-gradient relative min-h-[92vh] flex items-center overflow-hidden">
+        {/* Decorative blurs */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00B0F0]/15 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-6 py-20 lg:py-0">
+          <div className="grid lg:grid-cols-2 gap-14 items-center">
+            {/* Text side */}
             <div>
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.5 }}
+                className="mb-6"
               >
-                <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 px-4 py-2 rounded-full text-sm font-medium mb-6 border border-white/10">
-                  <Star className="w-4 h-4 text-codex-accent" />
+                <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white/90 px-4 py-2 rounded-full text-sm font-medium border border-white/15">
+                  <Star className="w-4 h-4 text-[#00B0F0] fill-[#00B0F0]" />
                   الوكالة رقم 1 في المغرب للحلول الرقمية
                 </span>
               </motion.div>
 
               <motion.h1
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-[2.5rem] sm:text-5xl lg:text-[3.5rem] font-extrabold text-white leading-[1.2] mb-6"
               >
                 نظّم شركتك{' '}
-                <span className="text-codex-accent">بذكاء</span>...
+                <span className="text-[#00B0F0]">بذكاء</span>...
                 <br />
                 مع{' '}
                 <span className="relative inline-block">
                   Codex
-                  <motion.div
+                  <motion.span
                     initial={{ width: 0 }}
                     animate={{ width: '100%' }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                    className="absolute -bottom-2 right-0 h-1 bg-codex-accent rounded-full"
+                    transition={{ duration: 0.7, delay: 0.7 }}
+                    className="absolute bottom-1 right-0 h-[3px] bg-[#00B0F0] rounded-full"
                   />
                 </span>
               </motion.h1>
 
               <motion.p
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-lg text-white/80 leading-relaxed mb-8 max-w-xl"
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-lg text-white/75 leading-[1.8] mb-8 max-w-lg"
               >
                 حلول رقمية متكاملة مصممة خصيصاً للشركات المغربية الصغيرة والمتوسطة.
                 وفّر الوقت، حسّن الإنتاجية، وركّز على اللي يهمك.
               </motion.p>
 
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.45 }}
-                className="flex flex-wrap gap-4"
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="flex flex-wrap gap-3 mb-10"
               >
                 <Button
                   size="lg"
                   onClick={() => onNavigate('contact')}
-                  className="bg-codex-accent hover:bg-codex-accent/90 text-white font-bold rounded-xl px-8 py-6 text-base shadow-xl shadow-codex-accent/30 hover:shadow-2xl hover:shadow-codex-accent/40 transition-all duration-300 hover:scale-105"
+                  className="bg-[#00B0F0] hover:bg-[#009ad6] text-white font-bold rounded-xl px-7 py-[14px] text-[16px] shadow-lg shadow-[#00B0F0]/25 hover:shadow-xl transition-all duration-200 cursor-pointer"
                 >
                   جرب Codex مجاناً
-                  <ChevronLeft className="w-5 h-5 mr-2" />
+                  <ArrowLeft className="w-5 h-5 mr-2" />
                 </Button>
                 <Button
                   variant="outline"
                   size="lg"
                   onClick={() => onNavigate('services')}
-                  className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 hover:text-white font-semibold rounded-xl px-8 py-6 text-base transition-all duration-300"
+                  className="bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 hover:text-white font-semibold rounded-xl px-7 py-[14px] text-[16px] transition-all duration-200 cursor-pointer"
                 >
                   شوف كيفاش كتخدم
-                  <ArrowLeft className="w-5 h-5 mr-2" />
                 </Button>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-                className="flex items-center gap-6 mt-10 text-white/70 text-sm"
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="flex items-center gap-6 text-white/65 text-sm"
               >
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                  <span>دعم تقني 24/7</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-codex-accent" />
-                  <span>بدون التزام</span>
-                </div>
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                  دعم تقني 24/7
+                </span>
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#00B0F0]" />
+                  بدون التزام
+                </span>
               </motion.div>
             </div>
 
-            {/* Hero Visual */}
+            {/* Visual side */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
               className="hidden lg:block"
             >
               <div className="relative">
-                {/* Main card */}
-                <div className="glass rounded-3xl p-8 shadow-2xl">
-                  <div className="bg-white/10 rounded-2xl p-6 mb-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-white/70 text-sm">إحصائيات الشهر</span>
-                      <span className="text-codex-accent text-xs font-medium">هذا الشهر</span>
+                <div className="glass rounded-3xl p-7">
+                  <div className="bg-white/[0.07] rounded-2xl p-5 mb-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-white/65 text-sm">إحصائيات الشهر</span>
+                      <span className="text-[#00B0F0] text-xs font-medium bg-[#00B0F0]/10 px-2.5 py-1 rounded-full">هذا الشهر</span>
                     </div>
-                    <div className="text-4xl font-bold text-white mb-1">+127%</div>
-                    <p className="text-white/60 text-sm">نمو في الإنتاجية</p>
+                    <div className="text-[2.5rem] font-extrabold text-white leading-none mb-1">+127%</div>
+                    <p className="text-white/55 text-sm">نمو في الإنتاجية</p>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white/10 rounded-xl p-4">
-                      <Users className="w-5 h-5 text-codex-accent mb-2" />
+                    <div className="bg-white/[0.07] rounded-xl p-4">
+                      <Users className="w-5 h-5 text-[#00B0F0] mb-2" />
                       <div className="text-xl font-bold text-white">485</div>
-                      <div className="text-white/60 text-xs">متدرب نشط</div>
+                      <div className="text-white/50 text-xs">متدرب نشط</div>
                     </div>
-                    <div className="bg-white/10 rounded-xl p-4">
-                      <CalendarCheck className="w-5 h-5 text-codex-accent mb-2" />
+                    <div className="bg-white/[0.07] rounded-xl p-4">
+                      <CalendarCheck className="w-5 h-5 text-[#00B0F0] mb-2" />
                       <div className="text-xl font-bold text-white">32</div>
-                      <div className="text-white/60 text-xs">حصة هاد الأسبوع</div>
+                      <div className="text-white/50 text-xs">حصة هاد الأسبوع</div>
                     </div>
                   </div>
                 </div>
 
-                {/* Floating elements */}
                 <motion.div
-                  animate={{ y: [-10, 10, -10] }}
+                  animate={{ y: [-8, 8, -8] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  className="absolute -top-4 -left-4 glass rounded-2xl p-4 shadow-xl"
+                  className="absolute -top-5 -right-5 glass rounded-2xl p-3.5 shadow-xl"
                 >
-                  <BarChart3 className="w-6 h-6 text-codex-accent" />
+                  <BarChart3 className="w-6 h-6 text-[#00B0F0]" />
                 </motion.div>
                 <motion.div
-                  animate={{ y: [10, -10, 10] }}
+                  animate={{ y: [8, -8, 8] }}
                   transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                  className="absolute -bottom-4 -right-4 glass rounded-2xl p-4 shadow-xl"
+                  className="absolute -bottom-5 -left-5 glass rounded-2xl p-3.5 shadow-xl"
                 >
-                  <Star className="w-6 h-6 text-yellow-400" />
+                  <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" />
                 </motion.div>
               </div>
             </motion.div>
@@ -222,132 +208,117 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* Trusted By Section */}
-      <section className="py-12 lg:py-16 bg-white border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeInSection>
-            <p className="text-center text-muted-foreground text-sm font-medium mb-8">
+      {/* ===== TRUSTED BY ===== */}
+      <section className="py-10 bg-white border-b border-[#e0e7ef]">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6">
+          <FadeIn>
+            <p className="text-center text-[#5a6a7e] text-sm font-medium mb-7">
               أكثر من 50 شركة مغربية تثق في Codex
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 lg:gap-16">
+            <div className="flex flex-wrap items-center justify-center gap-7 sm:gap-12">
               {trustedBy.map((item, i) => (
-                <motion.div
-                  key={i}
-                  whileHover={{ scale: 1.05 }}
-                  className="flex items-center gap-3 text-muted-foreground/60"
-                >
+                <div key={i} className="flex items-center gap-2.5 text-[#8a96a8]">
                   {item.icon}
                   <span className="text-sm font-medium">{item.name}</span>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </FadeInSection>
+          </FadeIn>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 lg:py-24 bg-gray-50/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeInSection className="text-center mb-12 lg:mb-16">
-            <span className="inline-block text-codex-accent text-sm font-semibold mb-3">
-              الميزات
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-codex-dark mb-4">
+      {/* ===== FEATURES ===== */}
+      <section className="py-20 lg:py-28 bg-[#f8fafc]">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6">
+          <FadeIn className="text-center mb-14">
+            <span className="inline-block text-[#00B0F0] text-sm font-bold mb-2">الميزات</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#002A5C] mb-4">
               كل اللي تحتاجه في مكان واحد
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+            <p className="text-[#5a6a7e] max-w-xl mx-auto text-[17px] leading-relaxed">
               أدوات قوية مصممة خصيصاً للشركات المغربية. سهلة الاستخدام، فعّالة، وموثوقة.
             </p>
-          </FadeInSection>
+          </FadeIn>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-            {features.map((feature, i) => (
-              <FadeInSection key={i} delay={i * 0.15}>
-                <motion.div
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white rounded-2xl p-6 lg:p-8 shadow-sm hover:shadow-xl transition-shadow duration-300 border border-border/50 h-full"
-                >
-                  <div className="w-14 h-14 rounded-xl bg-codex-accent/10 flex items-center justify-center mb-5">
-                    {feature.icon}
+          <div className="grid md:grid-cols-3 gap-6">
+            {features.map((f, i) => (
+              <FadeIn key={i} delay={i * 0.12}>
+                <div className="bg-white rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 border border-[#e0e7ef] h-full group">
+                  <div className="w-13 h-13 rounded-xl bg-[#00B0F0]/10 flex items-center justify-center mb-5 group-hover:bg-[#00B0F0]/20 transition-colors">
+                    {f.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-codex-dark mb-3">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                </motion.div>
-              </FadeInSection>
+                  <h3 className="text-lg font-bold text-[#002A5C] mb-3">{f.title}</h3>
+                  <p className="text-[#5a6a7e] leading-relaxed text-[15px]">{f.description}</p>
+                </div>
+              </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonial Section */}
-      <section className="py-16 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <FadeInSection>
-            <div className="max-w-3xl mx-auto text-center">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="bg-gradient-to-br from-codex-dark/5 to-codex-accent/5 rounded-3xl p-8 lg:p-12 border border-codex-accent/10"
-              >
-                <div className="flex items-center justify-center gap-1 mb-6">
+      {/* ===== TESTIMONIAL ===== */}
+      <section className="py-20 lg:py-28 bg-white">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6">
+          <FadeIn>
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="bg-gradient-to-br from-[#002A5C]/[0.03] to-[#00B0F0]/[0.06] rounded-3xl p-8 lg:p-12 border border-[#00B0F0]/10">
+                <div className="flex items-center justify-center gap-1 mb-5">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <blockquote className="text-xl lg:text-2xl font-medium text-codex-dark leading-relaxed mb-8">
+                <p className="text-xl lg:text-[22px] font-medium text-[#002A5C] leading-[1.9] mb-8">
                   &ldquo;من وقت اللي بدأنا نستخدم Codex، الإنتاجية تزاودت بـ 200%. النظام سهل بزاف،
                   والدعم التقني سريع ومتجاوب. أنصح أي شركة مغربية تجربهم.&rdquo;
-                </blockquote>
-                <div className="flex items-center justify-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-codex-dark flex items-center justify-center text-white font-bold text-lg">
+                </p>
+                <div className="flex items-center justify-center gap-3">
+                  <div className="w-11 h-11 rounded-full bg-[#002A5C] flex items-center justify-center text-white font-bold text-base">
                     أ
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-codex-dark">أحمد بنعلي</div>
-                    <div className="text-sm text-muted-foreground">
-                      مدير مركز التكوين المهني، الدار البيضاء
-                    </div>
+                    <div className="font-bold text-[#002A5C] text-[15px]">أحمد بنعلي</div>
+                    <div className="text-[13px] text-[#5a6a7e]">مدير مركز التكوين المهني، الدار البيضاء</div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
-          </FadeInSection>
+          </FadeIn>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 lg:py-24 cta-gradient relative overflow-hidden">
+      {/* ===== CTA ===== */}
+      <section className="cta-gradient py-20 lg:py-24 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/5 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-codex-accent/10 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/[0.04] rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#00B0F0]/10 rounded-full blur-[120px]" />
         </div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <FadeInSection>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+        <div className="relative max-w-3xl mx-auto px-5 sm:px-6 text-center">
+          <FadeIn>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-5 leading-tight">
               جاهز تبدأ رحلتك الرقمية؟
             </h2>
-            <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-white/75 mb-8 max-w-xl mx-auto leading-relaxed">
               انضم لأكثر من 50 شركة مغربية كتستفيد من حلول Codex الرقمية. ابدأ اليوم مجاناً!
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-3">
               <Button
                 size="lg"
                 onClick={() => onNavigate('contact')}
-                className="bg-white text-codex-dark hover:bg-white/90 font-bold rounded-xl px-8 py-6 text-base shadow-xl transition-all duration-300 hover:scale-105"
+                className="bg-white text-[#002A5C] hover:bg-white/90 font-bold rounded-xl px-7 py-[14px] text-[16px] shadow-xl transition-all duration-200 cursor-pointer"
               >
                 ابدأ مجاناً الآن
-                <ChevronLeft className="w-5 h-5 mr-2" />
+                <ArrowLeft className="w-5 h-5 mr-2" />
               </Button>
               <Button
                 variant="outline"
                 size="lg"
                 onClick={() => onNavigate('services')}
-                className="bg-transparent border-white/30 text-white hover:bg-white/10 hover:text-white font-semibold rounded-xl px-8 py-6 text-base transition-all duration-300"
+                className="bg-transparent border-white/25 text-white hover:bg-white/10 hover:text-white font-semibold rounded-xl px-7 py-[14px] text-[16px] transition-all duration-200 cursor-pointer"
               >
                 اطلع على الأسعار
               </Button>
             </div>
-          </FadeInSection>
+          </FadeIn>
         </div>
       </section>
     </div>

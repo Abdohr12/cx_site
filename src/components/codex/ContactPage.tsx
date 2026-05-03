@@ -7,38 +7,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
-  Phone,
-  Mail,
-  MapPin,
-  Send,
-  CheckCircle2,
-  MessageCircle,
-  Instagram,
-  Linkedin,
-  Twitter,
-  Clock,
+  Phone, Mail, MapPin, Send, CheckCircle2,
+  MessageCircle, Instagram, Linkedin, Twitter, Clock,
 } from 'lucide-react';
 
-function FadeInSection({
-  children,
-  className = '',
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
+function FadeIn({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-80px' });
-
+  const inView = useInView(ref, { once: true, margin: '-60px' });
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-      transition={{ duration: 0.7, delay, ease: 'easeOut' }}
-      className={className}
-    >
+    <motion.div ref={ref} initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay, ease: 'easeOut' }} className={className}>
       {children}
     </motion.div>
   );
@@ -46,312 +23,158 @@ function FadeInSection({
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    message: '',
-  });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
-    setFormData({ name: '', email: '', phone: '', company: '', message: '' });
+    setForm({ name: '', email: '', phone: '', company: '', message: '' });
   };
 
-  const contactInfo = [
-    {
-      icon: <Phone className="w-6 h-6 text-codex-accent" />,
-      title: 'الهاتف',
-      value: '+212 600 000 000',
-      subValue: 'متاح من الإثنين للجمعة، 9ص - 6م',
-      href: 'tel:+212600000000',
-    },
-    {
-      icon: <Mail className="w-6 h-6 text-codex-accent" />,
-      title: 'البريد الإلكتروني',
-      value: 'contact@codex.ma',
-      subValue: 'نرد خلال 24 ساعة',
-      href: 'mailto:contact@codex.ma',
-    },
-    {
-      icon: <MapPin className="w-6 h-6 text-codex-accent" />,
-      title: 'العنوان',
-      value: 'الدار البيضاء، المغرب',
-      subValue: 'حي المعاريف، شارع محمد الخامس',
-      href: '#',
-    },
-    {
-      icon: <Clock className="w-6 h-6 text-codex-accent" />,
-      title: 'ساعات العمل',
-      value: 'الإثنين - الجمعة',
-      subValue: '9:00 صباحاً - 6:00 مساءً',
-      href: '#',
-    },
+  const info = [
+    { icon: <Phone className="w-5 h-5 text-[#00B0F0]" />, title: 'الهاتف', value: '+212 600 000 000', sub: 'متاح من الإثنين للجمعة', href: 'tel:+212600000000' },
+    { icon: <Mail className="w-5 h-5 text-[#00B0F0]" />, title: 'البريد الإلكتروني', value: 'contact@codex.ma', sub: 'نرد خلال 24 ساعة', href: 'mailto:contact@codex.ma' },
+    { icon: <MapPin className="w-5 h-5 text-[#00B0F0]" />, title: 'العنوان', value: 'الدار البيضاء، المغرب', sub: 'حي المعاريف، شارع محمد الخامس', href: '#' },
+    { icon: <Clock className="w-5 h-5 text-[#00B0F0]" />, title: 'ساعات العمل', value: 'الإثنين - الجمعة', sub: '9:00 صباحاً - 6:00 مساءً', href: '#' },
   ];
 
+  const inputCls = 'rounded-xl border-[#e0e7ef] focus:border-[#00B0F0] focus:ring-[#00B0F0]/20';
+
   return (
-    <div className="pt-16 lg:pt-20">
-      {/* Header Section */}
-      <section className="hero-gradient py-16 lg:py-24 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute -top-20 -right-20 w-60 h-60 bg-codex-accent/10 rounded-full blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="inline-block bg-white/10 backdrop-blur-sm text-white/90 px-4 py-2 rounded-full text-sm font-medium mb-6 border border-white/10">
-              اتصل بنا
-            </span>
-            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-              عندك سؤال؟ <span className="text-codex-accent">مرحبا بك</span>
+    <div className="pt-[68px]">
+      {/* Header */}
+      <section className="hero-gradient py-16 lg:py-20 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#00B0F0]/10 rounded-full blur-[120px]" />
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-6 text-center">
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <span className="inline-block bg-white/10 backdrop-blur-sm text-white/90 px-4 py-2 rounded-full text-sm font-medium mb-5 border border-white/15">اتصل بنا</span>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 leading-tight">
+              عندك سؤال؟ <span className="text-[#00B0F0]">مرحبا بك</span>
             </h1>
-            <p className="text-lg text-white/80 max-w-2xl mx-auto">
+            <p className="text-lg text-white/75 max-w-xl mx-auto leading-relaxed">
               كنا هنا لمساعدتك. سواء عندك مشروع جديد أو عندك سؤال، لا تتردد تتواصل معنا.
-              الفريق جاهز!
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Contact Info Cards */}
-      <section className="py-12 lg:py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-            {contactInfo.map((info, i) => (
-              <FadeInSection key={i} delay={i * 0.1}>
-                <motion.a
-                  href={info.href}
-                  whileHover={{ y: -4, scale: 1.02 }}
-                  className="bg-gray-50/80 rounded-2xl p-5 lg:p-6 border border-border/50 block h-full hover:shadow-lg transition-shadow duration-300"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-codex-accent/10 flex items-center justify-center mb-3">
-                    {info.icon}
-                  </div>
-                  <h3 className="font-bold text-codex-dark text-sm lg:text-base mb-1">
-                    {info.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm font-medium">{info.value}</p>
-                  <p className="text-muted-foreground/70 text-xs mt-1">{info.subValue}</p>
-                </motion.a>
-              </FadeInSection>
+      {/* Contact Cards */}
+      <section className="py-12 bg-white">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {info.map((item, i) => (
+              <FadeIn key={i} delay={i * 0.08}>
+                <a href={item.href} className="bg-[#f8fafc] rounded-2xl p-5 border border-[#e0e7ef] block hover:shadow-md transition-shadow duration-200 h-full">
+                  <div className="w-9 h-9 rounded-lg bg-[#00B0F0]/10 flex items-center justify-center mb-3">{item.icon}</div>
+                  <h3 className="font-bold text-[#002A5C] text-[14px] mb-0.5">{item.title}</h3>
+                  <p className="text-[#3a4a5c] text-[13px] font-medium">{item.value}</p>
+                  <p className="text-[#8a96a8] text-[12px] mt-0.5">{item.sub}</p>
+                </a>
+              </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contact Form & Map */}
-      <section className="py-16 lg:py-24 bg-gray-50/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-            {/* Contact Form */}
-            <FadeInSection>
-              <div className="bg-white rounded-2xl p-6 lg:p-10 shadow-sm border border-border/50">
-                <h2 className="text-2xl lg:text-3xl font-bold text-codex-dark mb-2">
-                  أرسل رسالة
-                </h2>
-                <p className="text-muted-foreground mb-8">
-                  كمل الفورم هنا وسنرد عليك في أقرب وقت ممكن.
-                </p>
+      {/* Form & Map */}
+      <section className="py-20 bg-[#f8fafc]">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6">
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Form */}
+            <FadeIn>
+              <div className="bg-white rounded-2xl p-7 lg:p-9 shadow-sm border border-[#e0e7ef]">
+                <h2 className="text-2xl font-extrabold text-[#002A5C] mb-1">أرسل رسالة</h2>
+                <p className="text-[#5a6a7e] text-[15px] mb-7">كمل الفورم هنا وسنرد عليك في أقرب وقت ممكن.</p>
 
                 {submitted ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center justify-center py-12 text-center"
-                  >
-                    <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
-                    <h3 className="text-xl font-bold text-codex-dark mb-2">
-                      تم إرسال رسالتك بنجاح!
-                    </h3>
-                    <p className="text-muted-foreground">
-                      سنتواصل معك خلال 24 ساعة. شكراً لتواصلك مع Codex!
-                    </p>
+                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-16 text-center">
+                    <CheckCircle2 className="w-14 h-14 text-green-500 mb-4" />
+                    <h3 className="text-xl font-bold text-[#002A5C] mb-2">تم إرسال رسالتك بنجاح!</h3>
+                    <p className="text-[#5a6a7e] text-[15px]">سنتواصل معك خلال 24 ساعة. شكراً لتواصلك مع Codex!</p>
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid sm:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="text-sm font-medium text-codex-dark">
-                          الاسم الكامل *
-                        </Label>
-                        <Input
-                          id="name"
-                          required
-                          placeholder="مثال: أحمد العلوي"
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          className="rounded-xl border-border/80 focus:border-codex-accent focus:ring-codex-accent/20"
-                        />
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="name" className="text-[14px] font-medium text-[#002A5C]">الاسم الكامل *</Label>
+                        <Input id="name" required placeholder="أحمد العلوي" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email" className="text-sm font-medium text-codex-dark">
-                          البريد الإلكتروني *
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          required
-                          placeholder="example@email.com"
-                          dir="ltr"
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                          }
-                          className="rounded-xl border-border/80 focus:border-codex-accent focus:ring-codex-accent/20 text-right"
-                        />
+                      <div className="space-y-1.5">
+                        <Label htmlFor="email" className="text-[14px] font-medium text-[#002A5C]">البريد الإلكتروني *</Label>
+                        <Input id="email" type="email" required placeholder="example@email.com" dir="ltr" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputCls} />
                       </div>
                     </div>
-
-                    <div className="grid sm:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-sm font-medium text-codex-dark">
-                          رقم الهاتف
-                        </Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          placeholder="+212 600 000 000"
-                          dir="ltr"
-                          value={formData.phone}
-                          onChange={(e) =>
-                            setFormData({ ...formData, phone: e.target.value })
-                          }
-                          className="rounded-xl border-border/80 focus:border-codex-accent focus:ring-codex-accent/20 text-right"
-                        />
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="phone" className="text-[14px] font-medium text-[#002A5C]">رقم الهاتف</Label>
+                        <Input id="phone" type="tel" placeholder="+212 600 000 000" dir="ltr" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputCls} />
                       </div>
-                      <div className="space-y-2">
-                        <Label
-                          htmlFor="company"
-                          className="text-sm font-medium text-codex-dark"
-                        >
-                          اسم الشركة
-                        </Label>
-                        <Input
-                          id="company"
-                          placeholder="مثال: مركز التكوين المهني"
-                          value={formData.company}
-                          onChange={(e) =>
-                            setFormData({ ...formData, company: e.target.value })
-                          }
-                          className="rounded-xl border-border/80 focus:border-codex-accent focus:ring-codex-accent/20"
-                        />
+                      <div className="space-y-1.5">
+                        <Label htmlFor="company" className="text-[14px] font-medium text-[#002A5C]">اسم الشركة</Label>
+                        <Input id="company" placeholder="مركز التكوين المهني" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputCls} />
                       </div>
                     </div>
-
-                    <div className="space-y-2">
-                      <Label
-                        htmlFor="message"
-                        className="text-sm font-medium text-codex-dark"
-                      >
-                        الرسالة *
-                      </Label>
-                      <Textarea
-                        id="message"
-                        required
-                        placeholder="اوصف مشروعك أو سؤالك هنا..."
-                        rows={5}
-                        value={formData.message}
-                        onChange={(e) =>
-                          setFormData({ ...formData, message: e.target.value })
-                        }
-                        className="rounded-xl border-border/80 focus:border-codex-accent focus:ring-codex-accent/20 resize-none"
-                      />
+                    <div className="space-y-1.5">
+                      <Label htmlFor="message" className="text-[14px] font-medium text-[#002A5C]">الرسالة *</Label>
+                      <Textarea id="message" required placeholder="اوصف مشروعك أو سؤالك هنا..." rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={`${inputCls} resize-none`} />
                     </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full bg-codex-accent hover:bg-codex-accent/90 text-white font-bold rounded-xl py-3.5 shadow-lg shadow-codex-accent/25 hover:shadow-xl hover:shadow-codex-accent/30 transition-all duration-300 text-base"
-                    >
-                      <Send className="w-5 h-5 ml-2" />
-                      أرسل الرسالة
+                    <Button type="submit" className="w-full bg-[#00B0F0] hover:bg-[#009ad6] text-white font-bold rounded-xl py-3.5 shadow-lg shadow-[#00B0F0]/20 hover:shadow-xl transition-all duration-200 text-[15px] cursor-pointer">
+                      <Send className="w-5 h-5 ml-2" /> أرسل الرسالة
                     </Button>
                   </form>
                 )}
               </div>
-            </FadeInSection>
+            </FadeIn>
 
             {/* Map & Social */}
-            <FadeInSection delay={0.2}>
-              <div className="space-y-6">
-                {/* Map Placeholder */}
-                <motion.div
-                  whileHover={{ scale: 1.01 }}
-                  className="bg-gradient-to-br from-codex-dark to-codex-dark/90 rounded-2xl p-8 lg:p-10 text-white relative overflow-hidden"
-                >
+            <FadeIn delay={0.12}>
+              <div className="space-y-5">
+                {/* Map */}
+                <div className="bg-gradient-to-br from-[#002A5C] to-[#003d7a] rounded-2xl p-8 text-white relative overflow-hidden">
                   <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,176,240,0.3),transparent_70%)]" />
+                    <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(0,176,240,0.4),transparent_70%)]" />
                   </div>
                   <div className="relative">
-                    <MapPin className="w-10 h-10 text-codex-accent mb-4" />
-                    <h3 className="text-xl font-bold mb-2">موقعنا</h3>
-                    <p className="text-white/80 mb-1">الدار البيضاء، المغرب</p>
-                    <p className="text-white/60 text-sm">حي المعاريف، شارع محمد الخامس</p>
-                    <div className="mt-6 flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-white/70 text-sm">مفتوح الآن - ساعات العمل: 9ص - 6م</span>
+                    <MapPin className="w-9 h-9 text-[#00B0F0] mb-3" />
+                    <h3 className="text-lg font-bold mb-1">موقعنا</h3>
+                    <p className="text-white/80 text-[15px]">الدار البيضاء، المغرب</p>
+                    <p className="text-white/55 text-[13px]">حي المعاريف، شارع محمد الخامس</p>
+                    <div className="mt-5 flex items-center gap-2.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
+                      <span className="text-white/65 text-[13px]">مفتوح الآن — ساعات العمل: 9ص - 6م</span>
                     </div>
                   </div>
-                </motion.div>
+                </div>
 
-                {/* WhatsApp Quick Contact */}
-                <motion.a
-                  href="https://wa.me/212600000000"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  className="bg-green-50 rounded-2xl p-6 border border-green-200/50 flex items-center gap-4 block hover:shadow-lg transition-shadow duration-300"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-green-500 flex items-center justify-center shrink-0">
-                    <MessageCircle className="w-6 h-6 text-white" />
+                {/* WhatsApp */}
+                <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer" className="bg-green-50 rounded-2xl p-5 border border-green-200/50 flex items-center gap-4 hover:shadow-md transition-shadow duration-200">
+                  <div className="w-11 h-11 rounded-xl bg-green-500 flex items-center justify-center shrink-0">
+                    <MessageCircle className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-codex-dark">تواصل عبر WhatsApp</h3>
-                    <p className="text-muted-foreground text-sm">
-                      أسرع طريقة للتواصل معنا. رد فوري!
-                    </p>
+                    <h3 className="font-bold text-[#002A5C] text-[15px]">تواصل عبر WhatsApp</h3>
+                    <p className="text-[#5a6a7e] text-[13px]">أسرع طريقة للتواصل معنا. رد فوري!</p>
                   </div>
-                </motion.a>
+                </a>
 
-                {/* Social Links */}
-                <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-sm border border-border/50">
-                  <h3 className="font-bold text-codex-dark mb-4">تابعنا على السوشيال ميديا</h3>
+                {/* Social */}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#e0e7ef]">
+                  <h3 className="font-bold text-[#002A5C] mb-4 text-[15px]">تابعنا على السوشيال ميديا</h3>
                   <div className="flex items-center gap-3">
-                    <motion.a
-                      href="https://instagram.com/codex_ma"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1 }}
-                      className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/20 transition-all duration-300"
-                    >
-                      <Instagram size={22} />
-                    </motion.a>
-                    <motion.a
-                      href="#"
-                      whileHover={{ scale: 1.1 }}
-                      className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/20 transition-all duration-300"
-                    >
-                      <Linkedin size={22} />
-                    </motion.a>
-                    <motion.a
-                      href="#"
-                      whileHover={{ scale: 1.1 }}
-                      className="w-12 h-12 rounded-xl bg-black flex items-center justify-center text-white shadow-lg shadow-black/20 transition-all duration-300"
-                    >
-                      <Twitter size={22} />
-                    </motion.a>
+                    <a href="https://instagram.com/codex_ma" target="_blank" rel="noopener noreferrer" className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white shadow-md shadow-purple-500/20 hover:scale-105 transition-transform duration-200">
+                      <Instagram size={20} />
+                    </a>
+                    <a href="#" className="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-600/20 hover:scale-105 transition-transform duration-200">
+                      <Linkedin size={20} />
+                    </a>
+                    <a href="#" className="w-11 h-11 rounded-xl bg-black flex items-center justify-center text-white shadow-md shadow-black/20 hover:scale-105 transition-transform duration-200">
+                      <Twitter size={20} />
+                    </a>
                   </div>
                 </div>
               </div>
-            </FadeInSection>
+            </FadeIn>
           </div>
         </div>
       </section>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,81 +20,92 @@ const navLinks = [
 
 export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleNav = (page: string) => {
     onNavigate(page);
     setMobileOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="fixed top-0 right-0 left-0 z-50 bg-white/80 backdrop-blur-lg border-b border-border/50"
+    <nav
+      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-white/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
+          : 'bg-transparent'
+      }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6">
+        <div className="flex items-center justify-between h-[68px]">
           {/* Logo */}
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
+          <button
             onClick={() => handleNav('home')}
-            className="flex items-center gap-3 cursor-pointer"
+            className="flex items-center gap-2.5 cursor-pointer shrink-0"
           >
-            <Image
-              src="/logo.png"
-              alt="Codex"
-              width={40}
-              height={40}
-              className="rounded-lg"
-            />
-            <span className="text-2xl font-bold text-codex-dark">Codex</span>
-          </motion.button>
+            <Image src="/logo.png" alt="Codex" width={36} height={36} className="rounded-lg" />
+            <span
+              className={`text-xl font-bold transition-colors ${
+                scrolled ? 'text-[#002A5C]' : 'text-white'
+              }`}
+            >
+              Codex
+            </span>
+          </button>
 
-          {/* Desktop Nav Links */}
+          {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <motion.button
+              <button
                 key={link.id}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 onClick={() => handleNav(link.id)}
-                className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                className={`relative px-4 py-2 rounded-lg text-[15px] font-medium transition-all duration-200 cursor-pointer ${
                   currentPage === link.id
-                    ? 'text-codex-accent'
-                    : 'text-muted-foreground hover:text-codex-dark hover:bg-secondary'
+                    ? scrolled
+                      ? 'text-[#00B0F0]'
+                      : 'text-[#00B0F0]'
+                    : scrolled
+                    ? 'text-[#3a4a5c] hover:text-[#002A5C] hover:bg-[#f0f4f8]'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
+                {link.label}
                 {currentPage === link.id && (
                   <motion.div
-                    layoutId="navbar-indicator"
-                    className="absolute inset-0 bg-codex-accent/10 rounded-lg"
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                    layoutId="activeNav"
+                    className="absolute bottom-0.5 right-2 left-2 h-[2.5px] bg-[#00B0F0] rounded-full"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
-                <span className="relative z-10">{link.label}</span>
-              </motion.button>
+              </button>
             ))}
           </div>
 
-          {/* CTA Button */}
+          {/* Desktop CTA */}
           <div className="hidden md:block">
             <Button
               onClick={() => handleNav('contact')}
-              className="bg-codex-accent hover:bg-codex-accent/90 text-white font-semibold rounded-xl px-6 py-2.5 shadow-lg shadow-codex-accent/25 hover:shadow-xl hover:shadow-codex-accent/30 transition-all duration-300"
+              className="bg-[#00B0F0] hover:bg-[#009ad6] text-white font-semibold rounded-xl px-5 py-2.5 text-[15px] shadow-md shadow-[#00B0F0]/20 hover:shadow-lg hover:shadow-[#00B0F0]/30 transition-all duration-200 cursor-pointer"
             >
               ابدأ الآن
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Toggle */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-secondary transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-lg cursor-pointer"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileOpen ? (
+              <X size={22} className={scrolled ? 'text-[#002A5C]' : 'text-white'} />
+            ) : (
+              <Menu size={22} className={scrolled ? 'text-[#002A5C]' : 'text-white'} />
+            )}
           </button>
         </div>
       </div>
@@ -106,34 +117,35 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-white border-b border-border overflow-hidden"
+            transition={{ duration: 0.25 }}
+            className="md:hidden bg-white border-t border-[#e0e7ef] overflow-hidden"
           >
-            <div className="px-4 py-4 space-y-2">
+            <div className="px-5 py-3 space-y-1">
               {navLinks.map((link) => (
-                <motion.button
+                <button
                   key={link.id}
-                  whileTap={{ scale: 0.97 }}
                   onClick={() => handleNav(link.id)}
-                  className={`block w-full text-right px-4 py-3 rounded-xl text-base font-medium transition-colors cursor-pointer ${
+                  className={`block w-full text-right px-4 py-3 rounded-xl text-[15px] font-medium transition-colors cursor-pointer ${
                     currentPage === link.id
-                      ? 'bg-codex-accent/10 text-codex-accent'
-                      : 'text-muted-foreground hover:bg-secondary hover:text-codex-dark'
+                      ? 'bg-[#00B0F0]/8 text-[#00B0F0]'
+                      : 'text-[#3a4a5c] hover:bg-[#f0f4f8]'
                   }`}
                 >
                   {link.label}
-                </motion.button>
+                </button>
               ))}
-              <Button
-                onClick={() => handleNav('contact')}
-                className="w-full bg-codex-accent hover:bg-codex-accent/90 text-white font-semibold rounded-xl py-3 mt-2"
-              >
-                ابدأ الآن
-              </Button>
+              <div className="pt-2">
+                <Button
+                  onClick={() => handleNav('contact')}
+                  className="w-full bg-[#00B0F0] hover:bg-[#009ad6] text-white font-semibold rounded-xl py-3 cursor-pointer"
+                >
+                  ابدأ الآن
+                </Button>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </nav>
   );
 }
