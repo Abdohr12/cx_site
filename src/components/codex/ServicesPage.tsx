@@ -5,9 +5,11 @@ import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
-  Globe, Smartphone, Users, ShoppingCart, Palette, Headphones,
-  Check, ArrowLeft, Star, Zap, Crown,
+  Check, ArrowLeft, ArrowRight, Star, Zap, Crown,
 } from 'lucide-react';
+import Image from 'next/image';
+import { useLang } from '@/lib/LanguageContext';
+import type { TranslationKey } from '@/lib/i18n';
 
 interface ServicesPageProps {
   onNavigate: (page: string) => void;
@@ -24,20 +26,44 @@ function FadeIn({ children, className = '', delay = 0 }: { children: React.React
 }
 
 export default function ServicesPage({ onNavigate }: ServicesPageProps) {
-  const services = [
-    { icon: <Globe className="w-7 h-7 text-[#00B0F0]" />, title: 'تطوير مواقع الويب', description: 'نصمم ونطور مواقع ويب احترافية وسريعة ومتجاوبة. من المواقع البسيطة للمنصات المعقدة.', features: ['مواقع تجارية', 'منصات SaaS', 'لوحات التحكم', 'تحسين SEO'] },
-    { icon: <Smartphone className="w-7 h-7 text-[#00B0F0]" />, title: 'تطبيقات الموبايل', description: 'تطبيقات موبايل عصرية لنظامي iOS و Android. أداء ممتاز وتجربة مستخدم رائعة.', features: ['iOS & Android', 'تطبيقات أصلية', 'PWA', 'إشعارات فورية'] },
-    { icon: <Users className="w-7 h-7 text-[#00B0F0]" />, title: 'أنظمة إدارة المتدربين', description: 'نظام شامل لتدبير المتدربين، الحضور، النقاط، والشهادات. مصمم خصيصاً لمراكز التكوين.', features: ['تتبع الحضور', 'إدارة النقاط', 'إصدار الشهادات', 'تقارير مفصلة'] },
-    { icon: <ShoppingCart className="w-7 h-7 text-[#00B0F0]" />, title: 'حلول التجارة الإلكترونية', description: 'متاجر إلكترونية متكاملة مع طرق دفع محلية وخدمة توصيل. بيع منتجاتك بسهولة.', features: ['متاجر إلكترونية', 'دفع محلي', 'إدارة المخزون', 'تحليلات المبيعات'] },
-    { icon: <Palette className="w-7 h-7 text-[#00B0F0]" />, title: 'تصميم واجهات المستخدم', description: 'تصميم واجهات عصرية وجميلة تحسن تجربة المستخدم. من الهوية البصرية للنماذج التفاعلية.', features: ['UI/UX Design', 'تصميم الهوية', 'نماذج أولية', 'تصميم متجاوب'] },
-    { icon: <Headphones className="w-7 h-7 text-[#00B0F0]" />, title: 'الدعم التقني والصيانة', description: 'دعم تقني 24/7 وصيانة مستمرة لمشاريعك الرقمية. كن مطمئن، كينا هنا من أجلك.', features: ['دعم 24/7', 'صيانة دورية', 'تحديثات أمنية', 'نسخ احتياطي'] },
+  const { t, isRTL } = useLang();
+
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
+
+  const serviceIcons = [
+    '/icons/3d/web-dev.png',
+    '/icons/3d/mobile.png',
+    '/icons/3d/users.png',
+    '/icons/3d/ecommerce.png',
+    '/icons/3d/design.png',
+    '/icons/3d/support.png',
   ];
 
-  const pricingPlans = [
-    { name: 'أساسي', price: '1,500', period: 'درهم/شهر', desc: 'مثالي للشركات الصغيرة اللي غادي تبدأ', icon: <Zap className="w-5 h-5" />, features: ['موقع ويب احترافي', 'تصميم متجاوب', 'حتى 5 صفحات', 'نموذج اتصال', 'تحسين SEO أساسي', 'دعم عبر البريد'], rec: false },
-    { name: 'احترافي', price: '3,500', period: 'درهم/شهر', desc: 'الأكثر طلباً للشركات المتوسطة', icon: <Star className="w-5 h-5" />, features: ['كل شي في الباقة الأساسية', 'تطبيق موبايل', 'لوحة تحكم', 'حتى 20 صفحة', 'نظام إدارة المحتوى', 'تقارير وإحصائيات', 'دعم أولوي 24/7'], rec: true },
-    { name: 'مؤسسات', price: 'حسب', period: 'الاحتياج', desc: 'مخصص للشركات الكبيرة والمؤسسات', icon: <Crown className="w-5 h-5" />, features: ['كل شي في الباقة الاحترافية', 'حلول مخصصة بالكامل', 'فريق مخصص', 'SLA مضمون', 'تكاملات متقدمة', 'تدريب الفريق', 'صيانة وتحديثات مستمرة'], rec: false },
+  const serviceTitleKeys: TranslationKey[] = [
+    'svc_web_title', 'svc_mobile_title', 'svc_trainees_title',
+    'svc_ecommerce_title', 'svc_design_title', 'svc_support_title',
   ];
+
+  const serviceDescKeys: TranslationKey[] = [
+    'svc_web_desc', 'svc_mobile_desc', 'svc_trainees_desc',
+    'svc_ecommerce_desc', 'svc_design_desc', 'svc_support_desc',
+  ];
+
+  const serviceFeatureKeys: TranslationKey[] = [
+    'svc_web_features', 'svc_mobile_features', 'svc_trainees_features',
+    'svc_ecommerce_features', 'svc_design_features', 'svc_support_features',
+  ];
+
+  const planIcons = [<Zap key="z" className="w-5 h-5" />, <Star key="s" className="w-5 h-5" />, <Crown key="c" className="w-5 h-5" />];
+  const planNameKeys: TranslationKey[] = ['plan_basic', 'plan_pro', 'plan_enterprise'];
+  const planDescKeys: TranslationKey[] = ['plan_basic_desc', 'plan_pro_desc', 'plan_enterprise_desc'];
+  const planRec = [false, true, false];
+  const planPrices = ['1,500', '3,500', 'حسب'];
+  const planPeriods = ['درهم/شهر', 'درهم/شهر', 'الاحتياج'];
+
+  // Parse plan features from translations
+  const planFeaturesRaw = t('plan_features') as string;
+  const planFeatureGroups = planFeaturesRaw.split('|').map(group => group.split(','));
 
   return (
     <div className="pt-[68px]">
@@ -46,12 +72,12 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#00B0F0]/10 rounded-full blur-[120px]" />
         <div className="relative max-w-6xl mx-auto px-5 sm:px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <span className="inline-block bg-white/10 backdrop-blur-sm text-white/90 px-4 py-2 rounded-full text-sm font-medium mb-5 border border-white/15">خدماتنا</span>
+            <span className="inline-block bg-white/10 backdrop-blur-sm text-white/90 px-4 py-2 rounded-full text-sm font-medium mb-5 border border-white/15">{t('services_badge')}</span>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-5 leading-tight">
-              خدمات مصممة <span className="text-[#00B0F0]">للشركات المغربية</span>
+              {t('services_title')} <span className="text-[#00B0F0]">{t('services_title_hl')}</span>
             </h1>
             <p className="text-lg text-white/75 max-w-xl mx-auto leading-relaxed">
-              نقدم مجموعة واسعة من الخدمات الرقمية المتكاملة لمساعدتك تنمو وتتطور في العالم الرقمي
+              {t('services_desc')}
             </p>
           </motion.div>
         </div>
@@ -61,20 +87,25 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       <section className="py-20 lg:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-5 sm:px-6">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {services.map((s, i) => (
-              <FadeIn key={i} delay={i * 0.08}>
-                <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-[#e0e7ef] h-full group">
-                  <div className="w-12 h-12 rounded-xl bg-[#00B0F0]/10 flex items-center justify-center mb-4 group-hover:bg-[#00B0F0]/20 transition-colors">{s.icon}</div>
-                  <h3 className="text-lg font-bold text-[#002A5C] mb-2">{s.title}</h3>
-                  <p className="text-[#5a6a7e] text-[15px] leading-relaxed mb-4">{s.description}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {s.features.map((f, j) => (
-                      <Badge key={j} variant="secondary" className="text-[12px] bg-[#002A5C]/[0.05] text-[#002A5C] hover:bg-[#002A5C]/[0.08]">{f}</Badge>
-                    ))}
+            {serviceIcons.map((icon, i) => {
+              const features = (t(serviceFeatureKeys[i]) as string).split(',');
+              return (
+                <FadeIn key={i} delay={i * 0.08}>
+                  <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-[#e0e7ef] h-full group hover:translate-y-[-4px] hover:[transform:perspective(1000px)_rotateY(2deg)]">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#00B0F0]/15 to-[#00B0F0]/5 flex items-center justify-center mb-4 group-hover:from-[#00B0F0]/25 group-hover:to-[#00B0F0]/10 transition-all duration-300">
+                      <Image src={icon} alt="" width={32} height={32} className="drop-shadow-md" />
+                    </div>
+                    <h3 className="text-lg font-bold text-[#002A5C] mb-2">{t(serviceTitleKeys[i])}</h3>
+                    <p className="text-[#5a6a7e] text-[15px] leading-relaxed mb-4">{t(serviceDescKeys[i])}</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {features.map((f, j) => (
+                        <Badge key={j} variant="secondary" className="text-[12px] bg-[#002A5C]/[0.05] text-[#002A5C] hover:bg-[#002A5C]/[0.08]">{f.trim()}</Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </FadeIn>
-            ))}
+                </FadeIn>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -83,49 +114,49 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       <section className="py-20 lg:py-24 bg-[#f8fafc]">
         <div className="max-w-6xl mx-auto px-5 sm:px-6">
           <FadeIn className="text-center mb-14">
-            <span className="inline-block text-[#00B0F0] text-sm font-bold mb-2">الأسعار</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#002A5C] mb-4">باقات تناسب جميع الميزانيات</h2>
-            <p className="text-[#5a6a7e] max-w-xl mx-auto text-[17px]">اختار الباقة اللي تناسب احتياجاتك. كل الباقات فيها دعم تقني وضمان الجودة.</p>
+            <span className="inline-block text-[#00B0F0] text-sm font-bold mb-2">{t('pricing_badge')}</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#002A5C] mb-4">{t('pricing_title')}</h2>
+            <p className="text-[#5a6a7e] max-w-xl mx-auto text-[17px]">{t('pricing_desc')}</p>
           </FadeIn>
 
           <div className="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto items-start">
-            {pricingPlans.map((plan, i) => (
+            {planNameKeys.map((nameKey, i) => (
               <FadeIn key={i} delay={i * 0.1}>
-                <div className={`relative rounded-2xl p-6 h-full flex flex-col transition-shadow duration-300 ${
-                  plan.rec
-                    ? 'bg-[#002A5C] text-white shadow-xl shadow-[#002A5C]/20 border-2 border-[#00B0F0] md:scale-105'
-                    : 'bg-white shadow-sm hover:shadow-lg border border-[#e0e7ef]'
+                <div className={`relative rounded-2xl p-6 h-full flex flex-col transition-all duration-300 ${
+                  planRec[i]
+                    ? 'bg-[#002A5C] text-white shadow-xl shadow-[#002A5C]/20 border-2 border-[#00B0F0] md:scale-105 hover:translate-y-[-4px]'
+                    : 'bg-white shadow-sm hover:shadow-lg border border-[#e0e7ef] hover:translate-y-[-4px] hover:[transform:perspective(1000px)_rotateY(2deg)]'
                 }`}>
-                  {plan.rec && (
+                  {planRec[i] && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-[#00B0F0] text-white text-[11px] font-bold px-3 py-1">الأكثر طلباً</Badge>
+                      <Badge className="bg-[#00B0F0] text-white text-[11px] font-bold px-3 py-1">{t('plan_pro_badge')}</Badge>
                     </div>
                   )}
 
                   <div className="mb-5">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${plan.rec ? 'bg-[#00B0F0]/20 text-[#00B0F0]' : 'bg-[#00B0F0]/10 text-[#00B0F0]'}`}>{plan.icon}</div>
-                    <h3 className={`text-lg font-bold mb-1 ${plan.rec ? 'text-white' : 'text-[#002A5C]'}`}>{plan.name}</h3>
-                    <p className={`text-[13px] ${plan.rec ? 'text-white/65' : 'text-[#5a6a7e]'}`}>{plan.desc}</p>
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${planRec[i] ? 'bg-[#00B0F0]/20 text-[#00B0F0]' : 'bg-[#00B0F0]/10 text-[#00B0F0]'}`}>{planIcons[i]}</div>
+                    <h3 className={`text-lg font-bold mb-1 ${planRec[i] ? 'text-white' : 'text-[#002A5C]'}`}>{t(nameKey)}</h3>
+                    <p className={`text-[13px] ${planRec[i] ? 'text-white/65' : 'text-[#5a6a7e]'}`}>{t(planDescKeys[i])}</p>
                   </div>
 
                   <div className="mb-5 flex items-baseline gap-1">
-                    <span className={`text-3xl font-extrabold ${plan.rec ? 'text-white' : 'text-[#002A5C]'}`}>{plan.price}</span>
-                    <span className={`text-sm ${plan.rec ? 'text-white/65' : 'text-[#5a6a7e]'}`}>{plan.period}</span>
+                    <span className={`text-3xl font-extrabold ${planRec[i] ? 'text-white' : 'text-[#002A5C]'}`}>{planPrices[i]}</span>
+                    <span className={`text-sm ${planRec[i] ? 'text-white/65' : 'text-[#5a6a7e]'}`}>{planPeriods[i]}</span>
                   </div>
 
                   <ul className="space-y-2.5 mb-7 flex-1">
-                    {plan.features.map((f, j) => (
+                    {(planFeatureGroups[i] || []).map((f, j) => (
                       <li key={j} className="flex items-start gap-2.5">
-                        <Check className={`w-4 h-4 mt-0.5 shrink-0 ${plan.rec ? 'text-[#00B0F0]' : 'text-green-500'}`} />
-                        <span className={`text-[14px] ${plan.rec ? 'text-white/85' : 'text-[#5a6a7e]'}`}>{f}</span>
+                        <Check className={`w-4 h-4 mt-0.5 shrink-0 ${planRec[i] ? 'text-[#00B0F0]' : 'text-green-500'}`} />
+                        <span className={`text-[14px] ${planRec[i] ? 'text-white/85' : 'text-[#5a6a7e]'}`}>{f.trim()}</span>
                       </li>
                     ))}
                   </ul>
 
                   <Button onClick={() => onNavigate('contact')} className={`w-full font-semibold rounded-xl py-3 cursor-pointer transition-all duration-200 ${
-                    plan.rec ? 'bg-[#00B0F0] hover:bg-[#009ad6] text-white shadow-lg shadow-[#00B0F0]/20' : 'bg-[#002A5C] hover:bg-[#001d42] text-white'
+                    planRec[i] ? 'bg-[#00B0F0] hover:bg-[#009ad6] text-white shadow-lg shadow-[#00B0F0]/20' : 'bg-[#002A5C] hover:bg-[#001d42] text-white'
                   }`}>
-                    ابدأ الآن <ArrowLeft className="w-4 h-4 mr-1" />
+                    {t('plan_start')} <ArrowIcon className="w-4 h-4 ms-1" />
                   </Button>
                 </div>
               </FadeIn>
@@ -138,10 +169,10 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
       <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-5 sm:px-6 text-center">
           <FadeIn>
-            <h2 className="text-3xl font-extrabold text-[#002A5C] mb-4">محتار في الباقة اللي تناسبك؟</h2>
-            <p className="text-[#5a6a7e] text-[17px] mb-8 leading-relaxed">تواصل معنا واحنا نساعدك تختار الأفضل لمشروعك. الاستشارة مجانية!</p>
+            <h2 className="text-3xl font-extrabold text-[#002A5C] mb-4">{t('pricing_cta_title')}</h2>
+            <p className="text-[#5a6a7e] text-[17px] mb-8 leading-relaxed">{t('pricing_cta_desc')}</p>
             <Button size="lg" onClick={() => onNavigate('contact')} className="bg-[#00B0F0] hover:bg-[#009ad6] text-white font-bold rounded-xl px-7 py-[14px] text-[16px] shadow-lg shadow-[#00B0F0]/20 cursor-pointer transition-all duration-200">
-              تواصل معنا مجاناً <ArrowLeft className="w-5 h-5 mr-2" />
+              {t('pricing_cta_btn')} <ArrowIcon className="w-5 h-5 ms-2" />
             </Button>
           </FadeIn>
         </div>

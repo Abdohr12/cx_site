@@ -3,28 +3,27 @@
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Instagram, Linkedin, Twitter, ArrowUp } from 'lucide-react';
 import Image from 'next/image';
+import { useLang } from '@/lib/LanguageContext';
+import type { TranslationKey } from '@/lib/i18n';
 
 interface FooterProps {
   onNavigate: (page: string) => void;
 }
 
-const links = [
-  { label: 'الرئيسية', page: 'home' },
-  { label: 'خدماتنا', page: 'services' },
-  { label: 'من نحن', page: 'about' },
-  { label: 'اتصل بنا', page: 'contact' },
+const linkKeys: { page: string; key: TranslationKey }[] = [
+  { page: 'home', key: 'nav_home' },
+  { page: 'services', key: 'nav_services' },
+  { page: 'about', key: 'nav_about' },
+  { page: 'contact', key: 'nav_contact' },
 ];
 
-const services = [
-  'تطوير مواقع الويب',
-  'تطبيقات الموبايل',
-  'أنظمة إدارة المتدربين',
-  'حلول التجارة الإلكترونية',
-  'تصميم واجهات المستخدم',
-  'الدعم التقني والصيانة',
+const serviceKeys: TranslationKey[] = [
+  'svc_web_title', 'svc_mobile_title', 'svc_trainees_title',
+  'svc_ecommerce_title', 'svc_design_title', 'svc_support_title',
 ];
 
 export default function Footer({ onNavigate }: FooterProps) {
+  const { t } = useLang();
   const goUp = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const nav = (page: string) => { onNavigate(page); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
@@ -39,7 +38,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               <span className="text-xl font-bold">Codex</span>
             </div>
             <p className="text-white/60 text-[14px] leading-relaxed mb-5">
-              وكالة برمجة مغربية متخصصة في تطوير الحلول الرقمية المتكاملة للشركات الصغيرة والمتوسطة.
+              {t('footer_brand')}
             </p>
             <div className="flex items-center gap-2.5">
               <a href="https://instagram.com/codex_ma" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-lg bg-white/10 hover:bg-[#00B0F0] flex items-center justify-center transition-colors duration-200">
@@ -56,11 +55,11 @@ export default function Footer({ onNavigate }: FooterProps) {
 
           {/* Links */}
           <div>
-            <h3 className="text-[15px] font-bold mb-4">روابط سريعة</h3>
+            <h3 className="text-[15px] font-bold mb-4">{t('footer_links')}</h3>
             <ul className="space-y-2.5">
-              {links.map((l) => (
+              {linkKeys.map((l) => (
                 <li key={l.page}>
-                  <button onClick={() => nav(l.page)} className="text-white/60 hover:text-[#00B0F0] transition-colors text-[14px] cursor-pointer">{l.label}</button>
+                  <button onClick={() => nav(l.page)} className="text-white/60 hover:text-[#00B0F0] transition-colors text-[14px] cursor-pointer">{t(l.key)}</button>
                 </li>
               ))}
             </ul>
@@ -68,17 +67,17 @@ export default function Footer({ onNavigate }: FooterProps) {
 
           {/* Services */}
           <div>
-            <h3 className="text-[15px] font-bold mb-4">خدماتنا</h3>
+            <h3 className="text-[15px] font-bold mb-4">{t('footer_services')}</h3>
             <ul className="space-y-2.5">
-              {services.map((s) => (
-                <li key={s}><span className="text-white/60 text-[14px]">{s}</span></li>
+              {serviceKeys.map((key) => (
+                <li key={key}><span className="text-white/60 text-[14px]">{t(key)}</span></li>
               ))}
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="text-[15px] font-bold mb-4">تواصل معنا</h3>
+            <h3 className="text-[15px] font-bold mb-4">{t('footer_contact')}</h3>
             <ul className="space-y-3">
               <li className="flex items-center gap-2.5 text-white/60 text-[14px]">
                 <Phone size={14} className="text-[#00B0F0] shrink-0" />
@@ -86,11 +85,11 @@ export default function Footer({ onNavigate }: FooterProps) {
               </li>
               <li className="flex items-center gap-2.5 text-white/60 text-[14px]">
                 <Mail size={14} className="text-[#00B0F0] shrink-0" />
-                <span>contact@codex.ma</span>
+                <span dir="ltr">{t('ci_email_val')}</span>
               </li>
               <li className="flex items-start gap-2.5 text-white/60 text-[14px]">
                 <MapPin size={14} className="text-[#00B0F0] shrink-0 mt-0.5" />
-                <span>الدار البيضاء، المغرب</span>
+                <span>{t('ci_address_val')}</span>
               </li>
             </ul>
           </div>
@@ -100,7 +99,7 @@ export default function Footer({ onNavigate }: FooterProps) {
       {/* Bottom */}
       <div className="border-t border-white/10">
         <div className="max-w-6xl mx-auto px-5 sm:px-6 py-5 flex items-center justify-between">
-          <p className="text-white/40 text-[13px]">&copy; {new Date().getFullYear()} Codex. جميع الحقوق محفوظة.</p>
+          <p className="text-white/40 text-[13px]">&copy; {new Date().getFullYear()} Codex. {t('footer_copyright')}</p>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}

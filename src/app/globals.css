@@ -110,3 +110,50 @@ body {
   background: #00B0F0;
   color: white;
 }
+
+/* 3D card hover effect */
+@keyframes float-icon {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float-icon 4s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-icon 5s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float-icon 4.5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+/* Perspective 3D card hover */
+.card-3d-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-3d-hover:hover {
+  transform: perspective(1000px) rotateY(2deg) translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(0, 42, 92, 0.15);
+}
+
+[dir="ltr"] .card-3d-hover:hover {
+  transform: perspective(1000px) rotateY(-2deg) translateY(-4px);
+}
+
+/* RTL-specific icon flip for 3D icons */
+[dir="rtl"] .icon-3d {
+  transform: scaleX(-1);
+}
+
+/* Gradient icon containers */
+.icon-gradient {
+  background: linear-gradient(135deg, rgba(0, 176, 240, 0.15) 0%, rgba(0, 176, 240, 0.05) 100%);
+}
+
+.icon-gradient:hover {
+  background: linear-gradient(135deg, rgba(0, 176, 240, 0.25) 0%, rgba(0, 176, 240, 0.1) 100%);
+}

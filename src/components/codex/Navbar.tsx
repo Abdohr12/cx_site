@@ -2,23 +2,25 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { useLang } from '@/lib/LanguageContext';
 
 interface NavbarProps {
   currentPage: string;
   onNavigate: (page: string) => void;
 }
 
-const navLinks = [
-  { id: 'home', label: 'الرئيسية' },
-  { id: 'services', label: 'خدماتنا' },
-  { id: 'about', label: 'من نحن' },
-  { id: 'contact', label: 'اتصل بنا' },
+const navLinkKeys = [
+  { id: 'home', key: 'nav_home' as const },
+  { id: 'services', key: 'nav_services' as const },
+  { id: 'about', key: 'nav_about' as const },
+  { id: 'contact', key: 'nav_contact' as const },
 ];
 
 export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
+  const { t, toggleLang, lang, isRTL } = useLang();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -60,7 +62,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {navLinkKeys.map((link) => (
               <button
                 key={link.id}
                 onClick={() => handleNav(link.id)}
@@ -74,7 +76,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
                     : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
-                {link.label}
+                {t(link.key)}
                 {currentPage === link.id && (
                   <motion.div
                     layoutId="activeNav"
@@ -86,27 +88,48 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             ))}
           </div>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:block">
+          {/* Desktop CTA + Lang Toggle */}
+          <div className="hidden md:flex items-center gap-2">
+            <button
+              onClick={toggleLang}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer ${
+                scrolled
+                  ? 'text-[#002A5C] hover:bg-[#f0f4f8] border border-[#e0e7ef]'
+                  : 'text-white/80 hover:text-white hover:bg-white/10 border border-white/20'
+              }`}
+            >
+              <Globe className="w-4 h-4" />
+              {t('lang_switch')}
+            </button>
             <Button
               onClick={() => handleNav('contact')}
               className="bg-[#00B0F0] hover:bg-[#009ad6] text-white font-semibold rounded-xl px-5 py-2.5 text-[15px] shadow-md shadow-[#00B0F0]/20 hover:shadow-lg hover:shadow-[#00B0F0]/30 transition-all duration-200 cursor-pointer"
             >
-              ابدأ الآن
+              {t('nav_cta')}
             </Button>
           </div>
 
           {/* Mobile Toggle */}
-          <button
-            className="md:hidden p-2 rounded-lg cursor-pointer"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? (
-              <X size={22} className={scrolled ? 'text-[#002A5C]' : 'text-white'} />
-            ) : (
-              <Menu size={22} className={scrolled ? 'text-[#002A5C]' : 'text-white'} />
-            )}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={toggleLang}
+              className={`p-2 rounded-lg cursor-pointer text-sm font-bold ${
+                scrolled ? 'text-[#002A5C]' : 'text-white'
+              }`}
+            >
+              {t('lang_switch')}
+            </button>
+            <button
+              className="p-2 rounded-lg cursor-pointer"
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? (
+                <X size={22} className={scrolled ? 'text-[#002A5C]' : 'text-white'} />
+              ) : (
+                <Menu size={22} className={scrolled ? 'text-[#002A5C]' : 'text-white'} />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -121,7 +144,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             className="md:hidden bg-white border-t border-[#e0e7ef] overflow-hidden"
           >
             <div className="px-5 py-3 space-y-1">
-              {navLinks.map((link) => (
+              {navLinkKeys.map((link) => (
                 <button
                   key={link.id}
                   onClick={() => handleNav(link.id)}
@@ -131,7 +154,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
                       : 'text-[#3a4a5c] hover:bg-[#f0f4f8]'
                   }`}
                 >
-                  {link.label}
+                  {t(link.key)}
                 </button>
               ))}
               <div className="pt-2">
@@ -139,7 +162,7 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
                   onClick={() => handleNav('contact')}
                   className="w-full bg-[#00B0F0] hover:bg-[#009ad6] text-white font-semibold rounded-xl py-3 cursor-pointer"
                 >
-                  ابدأ الآن
+                  {t('nav_cta')}
                 </Button>
               </div>
             </div>
