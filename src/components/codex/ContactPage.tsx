@@ -26,13 +26,35 @@ function FadeIn({ children, className = '', delay = 0 }: { children: React.React
 export default function ContactPage() {
   const { t } = useLang();
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setForm({ name: '', email: '', phone: '', company: '', message: '' });
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 5000);
+        setForm({ name: '', email: '', phone: '', company: '', message: '' });
+      } else {
+        setError(data.message || 'Erreur');
+      }
+    } catch {
+      setError('Erreur de connexion');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const info = [
@@ -113,6 +135,12 @@ export default function ContactPage() {
                   <p className="text-[#5a6a7e] text-[15px]">{t('contact_form_desc')}</p>
                 </div>
 
+                {error && (
+                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-5 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-[14px] font-medium">
+                    {error}
+                  </motion.div>
+                )}
+
                 {submitted ? (
                   <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-20 text-center">
                     <motion.div
@@ -152,9 +180,20 @@ export default function ContactPage() {
                       <Label htmlFor="message" className="text-[14px] font-semibold text-[#002A5C]">{t('form_message')}</Label>
                       <Textarea id="message" required rows={5} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={`${inputCls} resize-none`} />
                     </div>
-                    <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-                      <Button type="submit" className="w-full bg-gradient-to-l from-[#00B0F0] to-[#0098d4] hover:from-[#00c4ff] hover:to-[#00B0F0] text-white font-bold rounded-2xl py-4 shadow-xl shadow-[#00B0F0]/25 hover:shadow-2xl hover:shadow-[#00B0F0]/35 transition-all duration-300 text-[15px] cursor-pointer">
-                        <Send className="w-5 h-5 me-2" /> {t('form_submit')}
+                    <motion.div whileHover={{ scale: loading ? 1 : 1.01 }} whileTap={{ scale: loading ? 1 : 0.99 }}>
+                      <Button type="submit" disabled={loading} className="w-full bg-gradient-to-l from-[#00B0F0] to-[#0098d4] hover:from-[#00c4ff] hover:to-[#00B0F0] text-white font-bold rounded-2xl py-4 shadow-xl shadow-[#00B0F0]/25 hover:shadow-2xl hover:shadow-[#00B0F0]/35 transition-all duration-300 text-[15px] cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed">
+                        {loading ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <motion.span
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                              className="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                            />
+                            {t('form_submit')}
+                          </span>
+                        ) : (
+                          <span><Send className="w-5 h-5 me-2" /> {t('form_submit')}</span>
+                        )}
                       </Button>
                     </motion.div>
                   </form>

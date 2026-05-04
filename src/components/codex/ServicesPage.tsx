@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Check, ArrowLeft, ArrowRight, Zap, Crown,
-  Sparkles, ArrowUpRight,
+  Sparkles, ArrowUpRight, Globe,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useLang } from '@/lib/LanguageContext';
@@ -54,12 +54,13 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
     'svc_ecommerce_features', 'svc_design_features', 'svc_support_features',
   ];
 
-  const planIcons = [<Zap key="z" className="w-5 h-5" />, <Sparkles key="s" className="w-5 h-5" />, <Crown key="c" className="w-5 h-5" />];
-  const planNameKeys: TranslationKey[] = ['plan_basic', 'plan_pro', 'plan_enterprise'];
-  const planDescKeys: TranslationKey[] = ['plan_basic_desc', 'plan_pro_desc', 'plan_enterprise_desc'];
-  const planRec = [false, true, false];
-  const planPrices = ['1,500', '3,500', 'حسب'];
-  const planPeriods = ['درهم/شهر', 'درهم/شهر', 'الاحتياج'];
+  const { lang } = useLang();
+  const planIcons = [<Zap key="z" className="w-5 h-5" />, <Crown key="c" className="w-5 h-5" />];
+  const planNameKeys: TranslationKey[] = ['plan_basic', 'plan_pro'];
+  const planDescKeys: TranslationKey[] = ['plan_basic_desc', 'plan_pro_desc'];
+  const planRec = [false, true];
+  const planPrices = lang === 'ar' ? ['1,500', '15,000'] : ['1 500', '15 000'];
+  const planPeriods = lang === 'ar' ? ['درهم/شهر', 'درهم/سنة'] : ['MAD/mois', 'MAD/an'];
 
   const planFeaturesRaw = t('plan_features') as string;
   const planFeatureGroups = planFeaturesRaw.split('|').map(group => group.split(','));
@@ -151,7 +152,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
             <p className="text-[#5a6a7e] max-w-2xl mx-auto text-[18px]">{t('pricing_desc')}</p>
           </FadeIn>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-start">
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto items-start">
             {planNameKeys.map((nameKey, i) => (
               <motion.div
                 key={i}
@@ -175,6 +176,14 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
                       <Badge className="bg-gradient-to-l from-[#00D4FF] to-[#00B0F0] text-white text-[11px] font-bold px-4 py-1.5 shadow-lg shadow-[#00B0F0]/30 border-0">
                         {t('plan_pro_badge')}
                       </Badge>
+                    </div>
+                  )}
+
+                  {!planRec[i] && (
+                    <div className="mt-1 mb-2">
+                      <span className={`text-xs font-semibold ${planRec[i] ? 'text-[#00D4FF]' : 'text-[#8a96a8]'}`}>
+                        {lang === 'ar' ? 'أو' : 'ou'}
+                      </span>
                     </div>
                   )}
 
