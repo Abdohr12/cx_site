@@ -26,7 +26,8 @@ export async function POST(req: NextRequest) {
         message,
         _subject: `Nouveau message de ${name} - Codex Contact`,
         _captcha: 'false',
-        _template: 'table',
+        _template: 'box',
+        _replyto: email,
       }),
     });
 
@@ -36,13 +37,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true });
     } else {
       return NextResponse.json(
-        { success: false, message: result.message || 'Failed to send message' },
+        { success: false, message: result.message || 'Failed to send message. Try the Email button.' },
         { status: 500 }
       );
     }
-  } catch {
+  } catch (err) {
+    console.error('Contact form error:', err);
     return NextResponse.json(
-      { success: false, message: 'Server error' },
+      { success: false, message: 'Server error. Please use the Email button to send your message directly.' },
       { status: 500 }
     );
   }
