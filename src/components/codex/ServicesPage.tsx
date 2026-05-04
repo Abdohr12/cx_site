@@ -1,12 +1,12 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useInView, useMotionValue, useTransform } from 'framer-motion';
+import { useRef, MouseEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Check, ArrowLeft, ArrowRight, Zap, Crown,
-  Sparkles, ArrowUpRight, Globe,
+  Sparkles, ArrowUpRight, Globe, Quote,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useLang } from '@/lib/LanguageContext';
@@ -23,6 +23,47 @@ function FadeIn({ children, className = '', delay = 0 }: { children: React.React
     <motion.div ref={ref} initial={{ opacity: 0, y: 40 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, delay, ease: [0.23, 1, 0.32, 1] }} className={className}>
       {children}
     </motion.div>
+  );
+}
+
+function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(x, [-0.5, 0.5], [-8, 8]);
+  const handleMouse = (e: MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const handleLeave = () => { x.set(0); y.set(0); };
+  return (
+    <motion.div ref={ref} style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+      onMouseMove={handleMouse} onMouseLeave={handleLeave} className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
+function FloatingCube({ size = 50, color = '#00B0F0', className = '' }: { size?: number; color?: string; className?: string }) {
+  const half = size / 2;
+  const faceStyle = (transform: string) => ({
+    position: 'absolute' as const, width: size, height: size,
+    transform, borderRadius: size * 0.15,
+    background: `linear-gradient(135deg, ${color}40, ${color}20)`,
+    border: `1px solid ${color}30`, backdropFilter: 'blur(4px)',
+  });
+  return (
+    <div className={className} style={{ width: size, height: size, transformStyle: 'preserve-3d' }}>
+      <div style={faceStyle(`translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateY(180deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateY(-90deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateY(90deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateX(90deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateX(-90deg) translateZ(${half}px)`)} />
+    </div>
   );
 }
 
@@ -142,101 +183,129 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="py-24 lg:py-28 mesh-gradient relative">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      {/* Pricing — 3D Modern Design */}
+      <section className="py-24 lg:py-28 relative overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #001529 0%, #002A5C 30%, #003d7a 60%, #002A5C 100%)' }}>
+        {/* 3D Background */}
+        <div className="absolute inset-0 scene-3d pointer-events-none">
+          <div className="absolute top-[10%] right-[8%] float-3d-1 hidden lg:block"><FloatingCube size={55} color="#00B0F0" /></div>
+          <div className="absolute top-[55%] left-[5%] float-3d-2 hidden lg:block"><FloatingCube size={45} color="#002A5C" /></div>
+          <div className="absolute bottom-[20%] right-[15%] float-3d-3 hidden lg:block"><FloatingCube size={40} color="#00D4FF" /></div>
+          <div className="absolute top-[40%] right-[20%] w-24 h-24 ring-3d hidden lg:block" />
+          <div className="absolute bottom-[30%] left-[10%] w-20 h-20 ring-3d hidden lg:block" style={{ animationDelay: '-5s', borderColor: 'rgba(0,42,92,0.2)' }} />
+        </div>
+        <div className="absolute inset-0 grid-pattern opacity-[0.2]" />
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
           <FadeIn className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 text-[#00B0F0] text-sm font-bold mb-3 uppercase tracking-wider">
+            <span className="inline-flex items-center gap-2 text-[#00D4FF] text-sm font-bold mb-3 uppercase tracking-wider">
               <Crown className="w-4 h-4" />
               {t('pricing_badge')}
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-extrabold text-[#002A5C] mb-5 leading-tight">{t('pricing_title')}</h2>
-            <p className="text-[#5a6a7e] max-w-2xl mx-auto text-[18px]">{t('pricing_desc')}</p>
+            <h2 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-extrabold text-white mb-5 leading-tight">{t('pricing_title')}</h2>
+            <p className="text-white/70 max-w-2xl mx-auto text-[18px]">{t('pricing_desc')}</p>
           </FadeIn>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
             {planNameKeys.map((nameKey, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.6, delay: i * 0.12, ease: [0.23, 1, 0.32, 1] }}
-                whileHover={{ y: -6 }}
-                className={planRec[i] ? 'md:-mt-4 md:mb-0' : ''}
-              >
-                <div className={`relative rounded-3xl p-8 h-full flex flex-col overflow-hidden ${
-                  planRec[i]
-                    ? 'pricing-popular text-white'
-                    : 'bg-white shadow-md border border-[#e0e7ef]/80'
-                }`}>
-                  {planRec[i] && (
-                    <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-l from-[#00D4FF] via-[#00B0F0] to-[#0088cc]" />
-                  )}
-
-                  {planRec[i] && (
-                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-gradient-to-l from-[#00D4FF] to-[#00B0F0] text-white text-[11px] font-bold px-4 py-1.5 shadow-lg shadow-[#00B0F0]/30 border-0">
-                        {t('plan_pro_badge')}
-                      </Badge>
-                    </div>
-                  )}
-
-                  <div className="mb-6 mt-2">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
-                      planRec[i] ? 'bg-[#00B0F0]/20 text-[#00D4FF]' : 'icon-container'
-                    }`}>{planIcons[i]}</div>
-                    <h3 className={`text-xl font-extrabold mb-2 ${planRec[i] ? 'text-white' : 'text-[#002A5C]'}`}>{t(nameKey)}</h3>
-                    <p className={`text-[14px] leading-relaxed ${planRec[i] ? 'text-white/70' : 'text-[#5a6a7e]'}`}>{t(planDescKeys[i])}</p>
-                  </div>
-
-                  <div className={`mb-6 flex items-baseline gap-1.5 pb-6 border-b ${planRec[i] ? 'border-white/15' : 'border-[#e0e7ef]'}`}>
-                    <span className={`text-4xl font-extrabold tracking-tight ${planRec[i] ? 'text-white' : 'text-[#002A5C]'}`}>{planPrices[i]}</span>
-                    <span className={`text-[15px] ${planRec[i] ? 'text-white/70' : 'text-[#5a6a7e]'}`}>{planPeriods[i]}</span>
-                  </div>
-
-                  <ul className="space-y-3.5 mb-8 flex-1">
-                    {(planFeatureGroups[i] || []).map((f, j) => (
-                      <li key={j} className="flex items-start gap-3">
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                          planRec[i] ? 'bg-[#00B0F0]/20' : 'bg-[#00B0F0]/10'
-                        }`}>
-                          <Check className={`w-3 h-3 ${planRec[i] ? 'text-[#00D4FF]' : 'text-[#00B0F0]'}`} />
-                        </div>
-                        <span className={`text-[14px] leading-relaxed ${planRec[i] ? 'text-white/85' : 'text-[#3a4a5e]'}`}>{f.trim()}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                    <Button onClick={() => onNavigate('contact')} className={`w-full font-bold rounded-2xl py-3.5 cursor-pointer transition-all duration-300 text-[15px] ${
+              <FadeIn key={i} delay={i * 0.15}>
+                <TiltCard className={planRec[i] ? 'md:-mt-6 md:mb-0' : ''}>
+                  <div className={`relative rounded-3xl p-8 lg:p-9 h-full flex flex-col overflow-hidden ${
+                    planRec[i]
+                      ? 'glass-strong glow-pulse-3d'
+                      : 'glass'
+                  }`} style={{ transformStyle: 'preserve-3d' }}>
+                    {/* Top gradient line */}
+                    <div className={`absolute top-0 left-0 right-0 h-1 ${
                       planRec[i]
-                        ? 'bg-gradient-to-l from-[#00D4FF] to-[#00B0F0] hover:from-[#00e0ff] hover:to-[#00c4ff] text-white shadow-lg shadow-[#00B0F0]/30 hover:shadow-xl hover:shadow-[#00B0F0]/40'
-                        : 'bg-gradient-to-l from-[#00B0F0] to-[#0098d4] hover:from-[#00c4ff] hover:to-[#00B0F0] text-white shadow-lg shadow-[#00B0F0]/20 hover:shadow-xl'
-                    }`}>
-                      {t('plan_start')} <ArrowIcon className="w-4 h-4 ms-1" />
-                    </Button>
-                  </motion.div>
-                </div>
-              </motion.div>
+                        ? 'bg-gradient-to-l from-[#00D4FF] via-[#00B0F0] to-[#0088cc]'
+                        : 'bg-gradient-to-l from-white/20 via-white/10 to-transparent'
+                    }`} />
+
+                    {/* Badge */}
+                    {planRec[i] && (
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                        <Badge className="bg-gradient-to-l from-[#00D4FF] to-[#00B0F0] text-white text-[11px] font-bold px-4 py-1.5 shadow-lg shadow-[#00B0F0]/30 border-0">
+                          {t('plan_pro_badge')}
+                        </Badge>
+                      </div>
+                    )}
+
+                    <div style={{ transform: 'translateZ(20px)' }}>
+                      {/* Icon & Title */}
+                      <div className="mb-6 mt-2">
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
+                          planRec[i] ? 'bg-[#00B0F0]/20 text-[#00D4FF]' : 'bg-white/10 text-[#00D4FF]'
+                        }`}>{planIcons[i]}</div>
+                        <h3 className={`text-xl font-extrabold mb-2 ${planRec[i] ? 'text-white' : 'text-white'}`}>{t(nameKey)}</h3>
+                        <p className={`text-[14px] leading-relaxed ${planRec[i] ? 'text-white/70' : 'text-white/60'}`}>{t(planDescKeys[i])}</p>
+                      </div>
+
+                      {/* Price */}
+                      <div className={`mb-6 flex items-baseline gap-1.5 pb-6 border-b ${planRec[i] ? 'border-white/15' : 'border-white/10'}`}>
+                        <span className="text-4xl font-extrabold tracking-tight text-white">{planPrices[i]}</span>
+                        <span className={`text-[15px] ${planRec[i] ? 'text-white/70' : 'text-white/60'}`}>{planPeriods[i]}</span>
+                      </div>
+
+                      {/* Features */}
+                      <ul className="space-y-3.5 mb-8 flex-1">
+                        {(planFeatureGroups[i] || []).map((f, j) => (
+                          <li key={j} className="flex items-start gap-3">
+                            <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                              planRec[i] ? 'bg-[#00B0F0]/20' : 'bg-white/10'
+                            }`}>
+                              <Check className={`w-3 h-3 ${planRec[i] ? 'text-[#00D4FF]' : 'text-[#00B0F0]'}`} />
+                            </div>
+                            <span className={`text-[14px] leading-relaxed ${planRec[i] ? 'text-white/85' : 'text-white/75'}`}>{f.trim()}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* CTA Button */}
+                      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                        <Button onClick={() => onNavigate('contact')} className={`w-full font-bold rounded-2xl py-3.5 cursor-pointer transition-all duration-300 text-[15px] ${
+                          planRec[i]
+                            ? 'bg-gradient-to-l from-[#00D4FF] to-[#00B0F0] hover:from-[#00e0ff] hover:to-[#00c4ff] text-white shadow-lg shadow-[#00B0F0]/30 hover:shadow-xl hover:shadow-[#00B0F0]/40'
+                            : 'bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30'
+                        }`}>
+                          {t('plan_start')} <ArrowIcon className="w-4 h-4 ms-1" />
+                        </Button>
+                      </motion.div>
+                    </div>
+                  </div>
+                </TiltCard>
+              </FadeIn>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="py-24 bg-white">
-        <div className="max-w-3xl mx-auto px-6 lg:px-8 text-center">
+      {/* Bottom CTA — Glass */}
+      <section className="py-24 mesh-gradient relative overflow-hidden">
+        <div className="absolute inset-0 scene-3d pointer-events-none">
+          <div className="absolute top-[20%] right-[10%] float-3d-2 hidden lg:block"><FloatingCube size={45} color="#00B0F0" /></div>
+          <div className="absolute bottom-[15%] left-[8%] float-3d-4 hidden lg:block"><FloatingCube size={35} color="#002A5C" /></div>
+        </div>
+        <div className="relative max-w-3xl mx-auto px-6 lg:px-8 text-center">
           <FadeIn>
-            <div className="bg-gradient-to-br from-[#f8fafc] to-white rounded-3xl p-10 lg:p-14 border border-[#e0e7ef]/60 shadow-lg shadow-[#002A5C]/[0.03]">
-              <h2 className="text-3xl font-extrabold text-[#002A5C] mb-4">{t('pricing_cta_title')}</h2>
-              <p className="text-[#5a6a7e] text-[17px] mb-8 leading-relaxed">{t('pricing_cta_desc')}</p>
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <Button size="lg" onClick={() => onNavigate('contact')} className="bg-gradient-to-l from-[#00B0F0] to-[#0098d4] hover:from-[#00c4ff] hover:to-[#00B0F0] text-white font-bold rounded-2xl px-8 py-4 text-[16px] shadow-xl shadow-[#00B0F0]/25 cursor-pointer transition-all duration-300">
-                  {t('pricing_cta_btn')} <ArrowIcon className="w-5 h-5 ms-2" />
-                </Button>
-              </motion.div>
-            </div>
+            <TiltCard>
+              <div className="bg-white rounded-3xl p-10 lg:p-14 shadow-xl shadow-[#002A5C]/[0.06] border border-[#e0e7ef]/80 relative overflow-hidden"
+                style={{ transformStyle: 'preserve-3d' }}>
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00B0F0]/30 to-transparent" />
+                <div style={{ transform: 'translateZ(20px)' }}>
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#002A5C] to-[#004d8a] flex items-center justify-center text-white mx-auto mb-5 shadow-lg shadow-[#002A5C]/20">
+                    <Quote className="w-7 h-7" />
+                  </div>
+                  <h2 className="text-3xl font-extrabold text-[#002A5C] mb-4">{t('pricing_cta_title')}</h2>
+                  <p className="text-[#5a6a7e] text-[17px] mb-8 leading-relaxed">{t('pricing_cta_desc')}</p>
+                  <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                    <Button size="lg" onClick={() => onNavigate('contact')} className="bg-gradient-to-l from-[#00B0F0] to-[#0098d4] hover:from-[#00c4ff] hover:to-[#00B0F0] text-white font-bold rounded-2xl px-8 py-4 text-[16px] shadow-xl shadow-[#00B0F0]/25 cursor-pointer transition-all duration-300">
+                      {t('pricing_cta_btn')} <ArrowIcon className="w-5 h-5 ms-2" />
+                    </Button>
+                  </motion.div>
+                </div>
+              </div>
+            </TiltCard>
           </FadeIn>
         </div>
       </section>
