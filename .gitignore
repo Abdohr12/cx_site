@@ -6,3 +6,4 @@ out/
 dev.log
 *.log
 upload/
+.vercel
