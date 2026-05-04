@@ -155,11 +155,6 @@ export default function ContactPage() {
         setSubmitted(true);
         setForm({ name: '', email: '', phone: '', company: '', message: '' });
         setTimeout(() => setSubmitted(false), 6000);
-      } else if (data.useMailto) {
-        handleMailto();
-        setSubmitted(true);
-        setForm({ name: '', email: '', phone: '', company: '', message: '' });
-        setTimeout(() => setSubmitted(false), 6000);
       } else {
         setError(data.message || 'Error');
       }
