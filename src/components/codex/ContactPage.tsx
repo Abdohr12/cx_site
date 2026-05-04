@@ -44,6 +44,12 @@ export default function ContactPage() {
         setSubmitted(true);
         setForm({ name: '', email: '', phone: '', company: '', message: '' });
         setTimeout(() => setSubmitted(false), 6000);
+      } else if (data.useMailto) {
+        // Auto-open mailto when API fails
+        handleMailto();
+        setSubmitted(true);
+        setForm({ name: '', email: '', phone: '', company: '', message: '' });
+        setTimeout(() => setSubmitted(false), 6000);
       } else {
         setError(data.message || 'Error');
       }

@@ -3,7 +3,7 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { Target, Heart, Sparkles, Award, Users, Zap, Shield, TrendingUp, Rocket, ArrowUpRight } from 'lucide-react';
-import Image from 'next/image';
+import { Button } from '@/components/ui/button';
 import { useLang } from '@/lib/LanguageContext';
 import type { TranslationKey } from '@/lib/i18n';
 

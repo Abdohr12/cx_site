@@ -96,12 +96,12 @@ body {
 
 /* ===== HERO GRADIENT ===== */
 .hero-gradient {
-  background: linear-gradient(155deg, #050d1a 0%, #0a1628 15%, #0f2847 35%, #003a75 55%, #005599 75%, #0088cc 95%);
+  background: linear-gradient(155deg, #001529 0%, #002A5C 30%, #003d7a 55%, #005599 75%, #0077bb 100%);
 }
 
 /* ===== CTA GRADIENT ===== */
 .cta-gradient {
-  background: linear-gradient(155deg, #050d1a 0%, #0f2847 25%, #003a75 50%, #0066aa 75%, #0088cc 100%);
+  background: linear-gradient(155deg, #001529 0%, #002A5C 30%, #004080 55%, #005599 80%, #0077bb 100%);
 }
 
 /* ===== GLASSMORPHISM ===== */
