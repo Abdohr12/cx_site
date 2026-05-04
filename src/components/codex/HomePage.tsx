@@ -161,10 +161,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
         <div className="relative max-w-4xl mx-auto px-6 lg:px-8 py-20 text-center">
           {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          <div
             className="mb-7"
           >
             <span className="inline-flex items-center gap-2.5 glass text-white/90 px-5 py-2.5 rounded-full text-sm font-semibold">
@@ -176,13 +173,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </motion.span>
               {t('hero_badge')}
             </span>
-          </motion.div>
+          </div>
 
           {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+          <h1
             className="text-[2.8rem] sm:text-[3.5rem] lg:text-[4.2rem] font-extrabold text-white leading-[1.15] mb-7"
           >
             {t('hero_title_1')}{' '}
@@ -191,30 +185,21 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             {t('hero_title_2')}{' '}
             <span className="relative inline-block">
               <span className="text-white">Codex</span>
-              <motion.span
-                initial={{ width: 0 }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 0.8, delay: 0.8, ease: [0.23, 1, 0.32, 1] }}
-                className="absolute -bottom-1.5 right-0 h-[4px] bg-gradient-to-l from-[#00B0F0] to-[#00D4FF] rounded-full"
+              <span
+                className="absolute -bottom-1.5 right-0 h-[4px] bg-gradient-to-l from-[#00B0F0] to-[#00D4FF] rounded-full w-full"
               />
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          <p
             className="text-lg sm:text-xl text-white/70 leading-[1.85] mb-10 max-w-2xl mx-auto"
           >
             {t('hero_desc')}
-          </motion.p>
+          </p>
 
           {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35, ease: [0.23, 1, 0.32, 1] }}
+          <div
             className="flex flex-wrap items-center justify-center gap-4 mb-10"
           >
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
@@ -237,13 +222,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 {t('hero_cta2')}
               </Button>
             </motion.div>
-          </motion.div>
+          </div>
 
           {/* Trust indicators */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+          <div
             className="flex items-center justify-center gap-8 text-white/60 text-sm"
           >
             <span className="flex items-center gap-2.5">
@@ -257,7 +239,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               <Shield className="w-4 h-4 text-[#00B0F0]/70" />
               {t('hero_no_commit')}
             </span>
-          </motion.div>
+          </div>
         </div>
 
         {/* Bottom wave */}
