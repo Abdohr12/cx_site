@@ -67,21 +67,23 @@ export default function AboutPage() {
     <div className="pt-[72px]">
       {/* Header */}
       <section className="hero-gradient py-20 lg:py-28 relative overflow-hidden">
+        {/* Dark overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/10 to-black/25 pointer-events-none" />
         <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-[#00B0F0]/15 rounded-full blur-[140px] orb" />
         <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#00B0F0]/8 rounded-full blur-[120px] orb-delay" />
         <div className="absolute inset-0 grid-pattern opacity-[0.3]" />
 
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}>
-            <span className="inline-flex items-center gap-2 glass text-white/90 px-5 py-2.5 rounded-full text-sm font-semibold mb-6">
+            <span className="inline-flex items-center gap-2 bg-white/[0.12] backdrop-blur-xl border border-white/[0.2] text-white px-5 py-2.5 rounded-full text-sm font-semibold mb-6 shadow-lg">
               <Award className="w-4 h-4 text-[#00D4FF]" />
               {t('about_badge')}
             </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
               {t('about_title')}{' '}
-              <span className="gradient-text">{t('about_title_hl')}</span>
+              <span className="text-[#00D4FF] drop-shadow-[0_2px_12px_rgba(0,176,240,0.5)]">{t('about_title_hl')}</span>
             </h1>
-            <p className="text-lg sm:text-xl text-white/65 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]">
               {t('about_desc')}
             </p>
           </motion.div>

@@ -69,21 +69,23 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
     <div className="pt-[72px]">
       {/* Header */}
       <section className="hero-gradient py-20 lg:py-28 relative overflow-hidden">
+        {/* Dark overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/10 to-black/25 pointer-events-none" />
         <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-[#00B0F0]/15 rounded-full blur-[140px] orb" />
         <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#00B0F0]/8 rounded-full blur-[120px] orb-delay" />
         <div className="absolute inset-0 grid-pattern opacity-[0.3]" />
 
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}>
-            <span className="inline-flex items-center gap-2 glass text-white/90 px-5 py-2.5 rounded-full text-sm font-semibold mb-6">
+            <span className="inline-flex items-center gap-2 bg-white/[0.12] backdrop-blur-xl border border-white/[0.2] text-white px-5 py-2.5 rounded-full text-sm font-semibold mb-6 shadow-lg">
               <Sparkles className="w-4 h-4 text-[#00D4FF]" />
               {t('services_badge')}
             </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]">
               {t('services_title')}{' '}
-              <span className="gradient-text">{t('services_title_hl')}</span>
+              <span className="text-[#00D4FF] drop-shadow-[0_2px_12px_rgba(0,176,240,0.5)]">{t('services_title_hl')}</span>
             </h1>
-            <p className="text-lg sm:text-xl text-white/65 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]">
               {t('services_desc')}
             </p>
           </motion.div>
@@ -152,7 +154,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
             <p className="text-[#5a6a7e] max-w-2xl mx-auto text-[18px]">{t('pricing_desc')}</p>
           </FadeIn>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto items-start">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
             {planNameKeys.map((nameKey, i) => (
               <motion.div
                 key={i}
@@ -161,14 +163,15 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.6, delay: i * 0.12, ease: [0.23, 1, 0.32, 1] }}
                 whileHover={{ y: -6 }}
+                className={planRec[i] ? 'md:-mt-4 md:mb-0' : ''}
               >
-                <div className={`relative rounded-3xl p-7 h-full flex flex-col overflow-hidden ${
+                <div className={`relative rounded-3xl p-8 h-full flex flex-col overflow-hidden ${
                   planRec[i]
                     ? 'pricing-popular text-white'
-                    : 'bg-white shadow-sm border border-[#e0e7ef]/80'
+                    : 'bg-white shadow-md border border-[#e0e7ef]/80'
                 }`}>
                   {planRec[i] && (
-                    <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-[#00D4FF] via-[#00B0F0] to-[#0088cc]" />
+                    <div className="absolute top-0 right-0 left-0 h-1.5 bg-gradient-to-l from-[#00D4FF] via-[#00B0F0] to-[#0088cc]" />
                   )}
 
                   {planRec[i] && (
@@ -179,36 +182,28 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
                     </div>
                   )}
 
-                  {!planRec[i] && (
-                    <div className="mt-1 mb-2">
-                      <span className={`text-xs font-semibold ${planRec[i] ? 'text-[#00D4FF]' : 'text-[#8a96a8]'}`}>
-                        {lang === 'ar' ? 'أو' : 'ou'}
-                      </span>
-                    </div>
-                  )}
-
                   <div className="mb-6 mt-2">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 ${
                       planRec[i] ? 'bg-[#00B0F0]/20 text-[#00D4FF]' : 'icon-container'
                     }`}>{planIcons[i]}</div>
-                    <h3 className={`text-lg font-extrabold mb-1.5 ${planRec[i] ? 'text-white' : 'text-[#002A5C]'}`}>{t(nameKey)}</h3>
-                    <p className={`text-[13px] ${planRec[i] ? 'text-white/55' : 'text-[#8a96a8]'}`}>{t(planDescKeys[i])}</p>
+                    <h3 className={`text-xl font-extrabold mb-2 ${planRec[i] ? 'text-white' : 'text-[#002A5C]'}`}>{t(nameKey)}</h3>
+                    <p className={`text-[14px] leading-relaxed ${planRec[i] ? 'text-white/70' : 'text-[#5a6a7e]'}`}>{t(planDescKeys[i])}</p>
                   </div>
 
-                  <div className="mb-6 flex items-baseline gap-1">
+                  <div className={`mb-6 flex items-baseline gap-1.5 pb-6 border-b ${planRec[i] ? 'border-white/15' : 'border-[#e0e7ef]'}`}>
                     <span className={`text-4xl font-extrabold tracking-tight ${planRec[i] ? 'text-white' : 'text-[#002A5C]'}`}>{planPrices[i]}</span>
-                    <span className={`text-sm ${planRec[i] ? 'text-white/55' : 'text-[#8a96a8]'}`}>{planPeriods[i]}</span>
+                    <span className={`text-[15px] ${planRec[i] ? 'text-white/70' : 'text-[#5a6a7e]'}`}>{planPeriods[i]}</span>
                   </div>
 
-                  <ul className="space-y-3 mb-8 flex-1">
+                  <ul className="space-y-3.5 mb-8 flex-1">
                     {(planFeatureGroups[i] || []).map((f, j) => (
                       <li key={j} className="flex items-start gap-3">
                         <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                          planRec[i] ? 'bg-[#00B0F0]/20' : 'bg-emerald-50'
+                          planRec[i] ? 'bg-[#00B0F0]/20' : 'bg-[#00B0F0]/10'
                         }`}>
-                          <Check className={`w-3 h-3 ${planRec[i] ? 'text-[#00D4FF]' : 'text-emerald-500'}`} />
+                          <Check className={`w-3 h-3 ${planRec[i] ? 'text-[#00D4FF]' : 'text-[#00B0F0]'}`} />
                         </div>
-                        <span className={`text-[14px] ${planRec[i] ? 'text-white/80' : 'text-[#5a6a7e]'}`}>{f.trim()}</span>
+                        <span className={`text-[14px] leading-relaxed ${planRec[i] ? 'text-white/85' : 'text-[#3a4a5e]'}`}>{f.trim()}</span>
                       </li>
                     ))}
                   </ul>
@@ -217,7 +212,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
                     <Button onClick={() => onNavigate('contact')} className={`w-full font-bold rounded-2xl py-3.5 cursor-pointer transition-all duration-300 text-[15px] ${
                       planRec[i]
                         ? 'bg-gradient-to-l from-[#00D4FF] to-[#00B0F0] hover:from-[#00e0ff] hover:to-[#00c4ff] text-white shadow-lg shadow-[#00B0F0]/30 hover:shadow-xl hover:shadow-[#00B0F0]/40'
-                        : 'bg-[#002A5C] hover:bg-[#001d42] text-white shadow-md shadow-[#002A5C]/15 hover:shadow-lg'
+                        : 'bg-gradient-to-l from-[#00B0F0] to-[#0098d4] hover:from-[#00c4ff] hover:to-[#00B0F0] text-white shadow-lg shadow-[#00B0F0]/20 hover:shadow-xl'
                     }`}>
                       {t('plan_start')} <ArrowIcon className="w-4 h-4 ms-1" />
                     </Button>

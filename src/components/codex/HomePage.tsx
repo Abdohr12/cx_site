@@ -86,6 +86,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     <div className="pt-[72px]">
       {/* ===== HERO ===== */}
       <section className="hero-gradient relative min-h-[88vh] flex items-center overflow-hidden">
+        {/* Dark overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30 pointer-events-none" />
         {/* Animated mesh orbs */}
         <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#00B0F0]/20 rounded-full blur-[150px] orb" />
         <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-[#00B0F0]/10 rounded-full blur-[130px] orb-delay" />
@@ -164,7 +166,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           <div
             className="mb-7"
           >
-            <span className="inline-flex items-center gap-2.5 glass text-white/90 px-5 py-2.5 rounded-full text-sm font-semibold">
+            <span className="inline-flex items-center gap-2.5 bg-white/[0.12] backdrop-blur-xl border border-white/[0.2] text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
               <motion.span
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
@@ -177,10 +179,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
           {/* Title */}
           <h1
-            className="text-[2.8rem] sm:text-[3.5rem] lg:text-[4.2rem] font-extrabold text-white leading-[1.15] mb-7"
+            className="text-[2.8rem] sm:text-[3.5rem] lg:text-[4.2rem] font-extrabold text-white leading-[1.15] mb-7 drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
           >
             {t('hero_title_1')}{' '}
-            <span className="gradient-text">{t('hero_title_highlight')}</span>
+            <span className="text-[#00D4FF] drop-shadow-[0_2px_12px_rgba(0,176,240,0.5)]">{t('hero_title_highlight')}</span>
             <br />
             {t('hero_title_2')}{' '}
             <span className="relative inline-block">
@@ -193,7 +195,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
           {/* Description */}
           <p
-            className="text-lg sm:text-xl text-white/70 leading-[1.85] mb-10 max-w-2xl mx-auto"
+            className="text-lg sm:text-xl text-white/90 leading-[1.85] mb-10 max-w-2xl mx-auto drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]"
           >
             {t('hero_desc')}
           </p>
@@ -439,7 +441,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <h2 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-extrabold text-white mb-6 leading-tight">
               {t('cta_title')}
             </h2>
-            <p className="text-lg sm:text-xl text-white/65 mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]">
               {t('cta_desc')}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
