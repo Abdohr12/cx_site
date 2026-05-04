@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useInView, useMotionValue, useTransform } from 'framer-motion';
+import { useRef, MouseEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -21,6 +21,7 @@ import {
   Palette,
   HeadphonesIcon,
   ShoppingCart,
+  Quote,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useLang } from '@/lib/LanguageContext';
@@ -59,6 +60,85 @@ function FadeInScale({ children, className = '', delay = 0 }: { children: React.
     >
       {children}
     </motion.div>
+  );
+}
+
+/* ===== 3D Tilt Card ===== */
+function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-0.5, 0.5], [10, -10]);
+  const rotateY = useTransform(x, [-0.5, 0.5], [-10, 10]);
+
+  const handleMouse = (e: MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const handleLeave = () => { x.set(0); y.set(0); };
+
+  return (
+    <motion.div ref={ref} style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+      onMouseMove={handleMouse} onMouseLeave={handleLeave}
+      className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
+/* ===== 3D Floating Cube ===== */
+function FloatingCube({ size = 50, color = '#00B0F0', className = '' }: { size?: number; color?: string; className?: string }) {
+  const half = size / 2;
+  const faceStyle = (transform: string) => ({
+    position: 'absolute' as const, width: size, height: size,
+    transform, borderRadius: size * 0.15,
+    background: `linear-gradient(135deg, ${color}40, ${color}20)`,
+    border: `1px solid ${color}30`,
+    backdropFilter: 'blur(4px)',
+  });
+  return (
+    <div className={className} style={{ width: size, height: size, transformStyle: 'preserve-3d' }}>
+      <div style={faceStyle(`translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateY(180deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateY(-90deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateY(90deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateX(90deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateX(-90deg) translateZ(${half}px)`)} />
+    </div>
+  );
+}
+
+/* ===== 3D Particle Field ===== */
+function ParticleField({ count = 15 }: { count?: number }) {
+  const particles = Array.from({ length: count }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 4 + 2,
+    duration: Math.random() * 6 + 4,
+    delay: Math.random() * 5,
+    px: (Math.random() - 0.5) * 60,
+    py: -(Math.random() * 150 + 50),
+    pz: (Math.random() - 0.5) * 80,
+    opacity: Math.random() * 0.4 + 0.1,
+  }));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ perspective: 800 }}>
+      {particles.map(p => (
+        <div key={p.id} className="absolute rounded-full particle-3d"
+          style={{
+            left: `${p.x}%`, top: `${p.y}%`,
+            width: p.size, height: p.size,
+            background: `radial-gradient(circle, ${p.size > 4 ? '#00D4FF' : '#00B0F0'} 0%, transparent 70%)`,
+            opacity: p.opacity,
+            '--px': `${p.px}px`, '--py': `${p.py}px`, '--pz': `${p.pz}px`,
+            '--duration': `${p.duration}s`, '--delay': `${p.delay}s`,
+          } as React.CSSProperties} />
+      ))}
+    </div>
   );
 }
 
@@ -370,51 +450,122 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* ===== TESTIMONIAL ===== */}
-      <section className="py-24 lg:py-32 bg-white relative overflow-hidden">
-        {/* Decorative bg elements */}
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#00B0F0]/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#002A5C]/5 rounded-full blur-[100px]" />
+      {/* ===== TESTIMONIAL — 3D Scene ===== */}
+      <section className="py-24 lg:py-32 relative overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #001529 0%, #002A5C 30%, #003d7a 60%, #002A5C 100%)' }}>
+        {/* 3D Background Scene */}
+        <div className="absolute inset-0 scene-3d pointer-events-none">
+          {/* Floating 3D Cubes */}
+          <div className="absolute top-[10%] right-[8%] float-3d-1 hidden lg:block">
+            <FloatingCube size={55} color="#00B0F0" />
+          </div>
+          <div className="absolute top-[55%] right-[5%] float-3d-2 hidden lg:block">
+            <FloatingCube size={40} color="#002A5C" />
+          </div>
+          <div className="absolute top-[25%] left-[6%] float-3d-3 hidden lg:block">
+            <FloatingCube size={50} color="#00D4FF" />
+          </div>
+          <div className="absolute bottom-[20%] left-[10%] float-3d-4 hidden lg:block">
+            <FloatingCube size={35} color="#00B0F0" />
+          </div>
+          {/* 3D Rings */}
+          <div className="absolute top-[20%] right-[20%] w-24 h-24 ring-3d hidden lg:block" />
+          <div className="absolute bottom-[25%] right-[15%] w-20 h-20 ring-3d hidden lg:block" style={{ animationDelay: '-5s', borderColor: 'rgba(0,42,92,0.25)' }} />
+          {/* Morphing sphere */}
+          <div className="absolute top-[40%] left-[15%] w-28 h-28 morph-sphere bg-[#00B0F0]/5 hidden lg:block" />
+        </div>
 
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Particles */}
+        <ParticleField count={20} />
+
+        {/* Grid pattern */}
+        <div className="absolute inset-0 grid-pattern opacity-[0.25]" />
+
+        <div className="relative max-w-4xl mx-auto px-6 lg:px-8">
           <FadeIn>
-            <div className="max-w-3xl mx-auto text-center">
-              <div className="relative bg-gradient-to-br from-[#f8fafc] to-white rounded-[2rem] p-10 lg:p-14 border border-[#e0e7ef]/60 shadow-lg shadow-[#002A5C]/[0.04]">
-                {/* Quote decoration */}
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#002A5C] to-[#004d8a] flex items-center justify-center shadow-lg shadow-[#002A5C]/20">
-                    <span className="text-white text-lg font-bold">&ldquo;</span>
-                  </div>
-                </div>
+            <div className="text-center mb-4">
+              <span className="inline-flex items-center gap-2 text-[#00D4FF] text-sm font-bold uppercase tracking-wider">
+                <Star className="w-4 h-4 fill-[#00D4FF] text-[#00D4FF]" />
+                {isRTL ? 'آراء عملائنا' : 'Témoignages'}
+              </span>
+            </div>
 
-                <div className="flex items-center justify-center gap-1.5 mb-7">
-                  {[...Array(5)].map((_, i) => (
+            {/* 3D Interactive Testimonial Card */}
+            <TiltCard className="max-w-3xl mx-auto">
+              <div className="relative rounded-[2rem] overflow-hidden"
+                style={{ transformStyle: 'preserve-3d' }}>
+                {/* Glass card */}
+                <div className="glass-strong rounded-[2rem] p-10 lg:p-14 relative overflow-hidden glow-pulse-3d">
+                  {/* Inner glass highlights */}
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00B0F0]/30 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/20 to-transparent" />
+                  <div className="absolute inset-0 grid-pattern opacity-[0.08]" />
+
+                  <div style={{ transform: 'translateZ(40px)' }}>
+                    {/* 3D Quote icon */}
                     <motion.div
-                      key={i}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.3 + i * 0.1 }}
+                      initial={{ scale: 0, rotateX: 90 }}
+                      whileInView={{ scale: 1, rotateX: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                      className="flex justify-center mb-8"
                     >
-                      <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                      <div className="relative">
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00B0F0] to-[#0098d4] flex items-center justify-center shadow-lg shadow-[#00B0F0]/30">
+                          <Quote className="w-7 h-7 text-white" />
+                        </div>
+                        {/* Glow behind icon */}
+                        <div className="absolute inset-0 rounded-2xl bg-[#00B0F0]/20 blur-xl -z-10" />
+                      </div>
                     </motion.div>
-                  ))}
-                </div>
 
-                <p className="text-xl lg:text-[22px] font-medium text-[#002A5C] leading-[2] mb-8">
-                  {t('testimonial_text')}
-                </p>
+                    {/* Animated Stars */}
+                    <div className="flex items-center justify-center gap-1.5 mb-8">
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0, rotateY: 90 }}
+                          whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.4 + i * 0.12, type: 'spring', stiffness: 300 }}
+                        >
+                          <Star className="w-6 h-6 fill-amber-400 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
+                        </motion.div>
+                      ))}
+                    </div>
 
-                <div className="flex items-center justify-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#002A5C] to-[#004d8a] flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-[#002A5C]/20">
-                    {t('testimonial_name').charAt(0)}
-                  </div>
-                  <div className="text-right">
-                    <div className="font-bold text-[#002A5C] text-[15px]">{t('testimonial_name')}</div>
-                    <div className="text-[#8a96a8] text-[13px]">{t('testimonial_role')}</div>
+                    {/* Testimonial Text */}
+                    <motion.p
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.6, duration: 0.7 }}
+                      className="text-xl lg:text-[22px] font-medium text-white leading-[2] mb-8 text-center"
+                    >
+                      &ldquo;{t('testimonial_text')}&rdquo;
+                    </motion.p>
+
+                    {/* Author info */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 15 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.8, duration: 0.6 }}
+                      className="flex items-center justify-center gap-4"
+                    >
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00B0F0] to-[#0098d4] flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-[#00B0F0]/25 relative">
+                        {t('testimonial_name').charAt(0)}
+                        <div className="absolute inset-0 rounded-2xl bg-white/0 hover:bg-white/10 transition-colors" />
+                      </div>
+                      <div className="text-center">
+                        <div className="font-bold text-white text-[16px]">{t('testimonial_name')}</div>
+                        <div className="text-white/50 text-[13px]">{t('testimonial_role')}</div>
+                      </div>
+                    </motion.div>
                   </div>
                 </div>
               </div>
-            </div>
+            </TiltCard>
           </FadeIn>
         </div>
       </section>
