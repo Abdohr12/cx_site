@@ -248,7 +248,7 @@ function TestimonialTicker() {
       <div className="absolute left-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-r from-[#001529] to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-l from-[#001529] to-transparent z-10 pointer-events-none" />
       <div className="overflow-hidden w-full">
-        <div ref={trackRef} className="flex" style={{ width: 'max-content', willChange: 'transform' }}>
+        <div ref={trackRef} className="flex" style={{ width: 'max-content', willChange: 'transform', direction: 'ltr' }}>
           {items.map((item) => (
             <Card key={item.key} idx={item.index} />
           ))}
