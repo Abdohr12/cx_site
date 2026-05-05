@@ -83,6 +83,13 @@ function FloatingCube({ size = 60, color = '#00B0F0', className = '' }: { size?:
 
 /* ===== 3D Particle Field ===== */
 function ParticleField() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  if (!mounted) {
+    return <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ perspective: 800 }} />;
+  }
+
   const particles = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
