@@ -575,7 +575,7 @@ export default function ContactPage() {
                             value={form.name}
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                             className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] h-12 px-4 text-white text-[14px] outline-none placeholder:text-white/30 backdrop-blur-sm"
-                            placeholder={t('form_name').replace(' *', '')
+                            placeholder={t('form_name').replace(' *', '')}
                           />
                         </div>
                         <div>
