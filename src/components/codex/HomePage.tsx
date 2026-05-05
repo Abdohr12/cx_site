@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useInView, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useInView, useMotionValue, useTransform } from 'framer-motion';
 import { useRef, useState, useEffect, MouseEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,8 +22,7 @@ import {
   HeadphonesIcon,
   ShoppingCart,
   Quote,
-  ChevronLeft,
-  ChevronRight,
+
 } from 'lucide-react';
 import Image from 'next/image';
 import { useLang } from '@/lib/LanguageContext';
@@ -135,10 +134,9 @@ function ParticleField({ count = 15 }: { count?: number }) {
   );
 }
 
-/* ===== Testimonial Auto-Scrolling Carousel ===== */
+/* ===== Testimonial Infinite Scroll Carousel ===== */
 function TestimonialCarousel() {
   const { t, isRTL } = useLang();
-  const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const total = 8;
 
@@ -148,97 +146,78 @@ function TestimonialCarousel() {
     'from-[#00B0F0] to-[#0098d4]', 'from-[#004d8a] to-[#002A5C]',
   ];
 
-  useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(() => {
-      setCurrent(prev => (prev + 1) % total);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, [isPaused, total]);
+  // Build testimonial items (original + duplicate for seamless loop)
+  const items = Array.from({ length: total * 3 }, (_, i) => ({
+    index: i % total,
+    key: i,
+  }));
 
-  const goTo = (index: number) => setCurrent(index);
-  const prev = () => setCurrent(p => (p - 1 + total) % total);
-  const next = () => setCurrent(p => (p + 1) % total);
+  // Render a single testimonial card
+  const Card = ({ idx }: { idx: number }) => (
+    <div className="flex-shrink-0 w-[340px] sm:w-[380px] px-3">
+      <div className="glass-strong rounded-2xl p-7 relative overflow-hidden h-full group/card hover:bg-white/[0.14] transition-all duration-500">
+        {/* Glass highlights */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00B0F0]/25 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/15 to-transparent" />
+        <div className="absolute inset-0 grid-pattern opacity-[0.04]" />
+
+        {/* Quote icon */}
+        <div className="mb-5">
+          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${testimonialColors[idx]} flex items-center justify-center shadow-lg`}
+            style={{ boxShadow: `0 4px 20px ${idx % 2 === 0 ? 'rgba(0,176,240,0.25)' : 'rgba(0,42,92,0.25)'}` }}>
+            <Quote className="w-5 h-5 text-white" />
+          </div>
+        </div>
+
+        {/* Stars */}
+        <div className="flex items-center gap-0.5 mb-4">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.3)]" />
+          ))}
+        </div>
+
+        {/* Text */}
+        <p className="text-[15px] leading-[1.85] text-white/90 mb-6 min-h-[100px]">
+          &ldquo;{t(`testimonial_${idx + 1}_text` as TranslationKey)}&rdquo;
+        </p>
+
+        {/* Author */}
+        <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/[0.08]">
+          <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${testimonialColors[idx]} flex items-center justify-center text-white font-bold text-base shadow-md`}>
+            {t(`testimonial_${idx + 1}_name` as TranslationKey).charAt(0)}
+          </div>
+          <div>
+            <div className="font-bold text-white text-[13px]">{t(`testimonial_${idx + 1}_name` as TranslationKey)}</div>
+            <div className="text-white/45 text-[12px]">{t(`testimonial_${idx + 1}_role` as TranslationKey)}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="relative" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
-      <div className="max-w-3xl mx-auto relative overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current}
-            initial={{ opacity: 0, x: isRTL ? -60 : 60, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: isRTL ? 60 : -60, scale: 0.95 }}
-            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+      {/* Gradient fade on edges */}
+      <div className="relative">
+        {/* Left fade */}
+        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-[#001529] to-transparent z-10 pointer-events-none" />
+        {/* Right fade */}
+        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-[#001529] to-transparent z-10 pointer-events-none" />
+
+        {/* Scrolling track */}
+        <div className="overflow-hidden">
+          <div
+            className={`flex gap-0 ${isPaused ? '' : 'testimonial-scroll-track'}`}
+            style={{
+              width: 'max-content',
+              ...(isPaused ? { animationPlayState: 'paused' } : {}),
+            }}
           >
-            <div className="glass-strong rounded-[2rem] p-8 sm:p-10 lg:p-14 relative overflow-hidden glow-pulse-3d">
-              {/* Glass highlights */}
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00B0F0]/30 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/20 to-transparent" />
-              <div className="absolute inset-0 grid-pattern opacity-[0.06]" />
-
-              {/* Quote icon */}
-              <div className="flex justify-center mb-6">
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00B0F0] to-[#0098d4] flex items-center justify-center shadow-lg shadow-[#00B0F0]/30">
-                    <Quote className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="absolute inset-0 rounded-2xl bg-[#00B0F0]/20 blur-xl -z-10" />
-                </div>
-              </div>
-
-              {/* Stars */}
-              <div className="flex items-center justify-center gap-1 mb-6">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.4)]" />
-                ))}
-              </div>
-
-              {/* Text */}
-              <p className="text-lg sm:text-xl lg:text-[22px] font-medium text-white leading-[1.95] mb-8 text-center">
-                &ldquo;{t(`testimonial_${current + 1}_text` as TranslationKey)}&rdquo;
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center justify-center gap-4">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${testimonialColors[current]} flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
-                  {t(`testimonial_${current + 1}_name` as TranslationKey).charAt(0)}
-                </div>
-                <div className="text-center">
-                  <div className="font-bold text-white text-[15px]">{t(`testimonial_${current + 1}_name` as TranslationKey)}</div>
-                  <div className="text-white/50 text-[13px]">{t(`testimonial_${current + 1}_role` as TranslationKey)}</div>
-                </div>
-              </div>
-
-              {/* Counter */}
-              <div className="text-center mt-6">
-                <span className="text-white/30 text-sm font-medium">{current + 1} / {total}</span>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Navigation arrows */}
-        <button onClick={prev}
-          className="absolute top-1/2 -translate-y-1/2 w-11 h-11 rounded-xl glass-strong flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all duration-300 cursor-pointer z-10 hidden sm:flex"
-          style={isRTL ? { right: '-20px' } : { left: '-20px' }}>
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button onClick={next}
-          className="absolute top-1/2 -translate-y-1/2 w-11 h-11 rounded-xl glass-strong flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all duration-300 cursor-pointer z-10 hidden sm:flex"
-          style={isRTL ? { left: '-20px' } : { right: '-20px' }}>
-          <ChevronRight className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* Dots */}
-      <div className="flex items-center justify-center gap-2 mt-8">
-        {Array.from({ length: total }).map((_, i) => (
-          <button key={i} onClick={() => goTo(i)}
-            className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-              i === current ? 'w-8 bg-[#00B0F0]' : 'w-2 bg-white/20 hover:bg-white/40'
-            }`} />
-        ))}
+            {items.map((item) => (
+              <Card key={item.key} idx={item.index} />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

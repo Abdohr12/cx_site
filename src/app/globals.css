@@ -517,3 +517,24 @@ body {
   background-size: 400% 400%;
   animation: holo-shift 6s ease infinite;
 }
+
+/* ===== TESTIMONIAL INFINITE SCROLL ===== */
+@keyframes testimonial-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-1 * (380px * 8))); }
+}
+
+.testimonial-scroll-track {
+  animation: testimonial-scroll 40s linear infinite;
+}
+
+.testimonial-scroll-track:hover {
+  animation-play-state: paused;
+}
+
+@media (max-width: 640px) {
+  @keyframes testimonial-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-1 * (340px * 8))); }
+  }
+}
