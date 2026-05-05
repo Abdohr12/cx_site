@@ -520,20 +520,20 @@ body {
 
 /* ===== TESTIMONIAL SINGLE-ROW INFINITE TICKER ===== */
 
-/* Scrolls LEFT continuously — shifts by 8 cards (one full set) then loops */
-@keyframes scroll-left {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(calc(-1 * (400px * 8))); }
+/* Scrolls RIGHT — enters from LEFT side, exits from RIGHT side */
+@keyframes scroll-right {
+  0% { transform: translateX(calc(-1 * (400px * 8))); }
+  100% { transform: translateX(0); }
 }
 
 .testimonial-scroll-left {
-  animation: scroll-left 60s linear infinite;
+  animation: scroll-right 60s linear infinite;
 }
 
 @media (max-width: 768px) {
-  @keyframes scroll-left {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-1 * (340px * 8))); }
+  @keyframes scroll-right {
+    0% { transform: translateX(calc(-1 * (340px * 8))); }
+    100% { transform: translateX(0); }
   }
   .testimonial-scroll-left {
     animation-duration: 50s;
@@ -541,9 +541,9 @@ body {
 }
 
 @media (max-width: 640px) {
-  @keyframes scroll-left {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-1 * (300px * 8))); }
+  @keyframes scroll-right {
+    0% { transform: translateX(calc(-1 * (300px * 8))); }
+    100% { transform: translateX(0); }
   }
   .testimonial-scroll-left {
     animation-duration: 40s;
