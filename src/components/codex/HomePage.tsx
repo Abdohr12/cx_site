@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useInView, useMotionValue, useTransform } from 'framer-motion';
-import { useRef, useState, useEffect, MouseEvent } from 'react';
+import { useRef, MouseEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -134,10 +134,9 @@ function ParticleField({ count = 15 }: { count?: number }) {
   );
 }
 
-/* ===== Testimonial Infinite Scroll Carousel ===== */
-function TestimonialCarousel() {
+/* ===== Testimonial Infinite Scroll Ticker — Full Width ===== */
+function TestimonialTicker() {
   const { t, isRTL } = useLang();
-  const [isPaused, setIsPaused] = useState(false);
   const total = 8;
 
   const testimonialColors = [
@@ -146,49 +145,49 @@ function TestimonialCarousel() {
     'from-[#00B0F0] to-[#0098d4]', 'from-[#004d8a] to-[#002A5C]',
   ];
 
-  // Build testimonial items (original + duplicate for seamless loop)
-  const items = Array.from({ length: total * 3 }, (_, i) => ({
+  // Build testimonial items — 4 copies for ultra-smooth seamless loop
+  const items = Array.from({ length: total * 4 }, (_, i) => ({
     index: i % total,
     key: i,
   }));
 
   // Render a single testimonial card
   const Card = ({ idx }: { idx: number }) => (
-    <div className="flex-shrink-0 w-[340px] sm:w-[380px] px-3">
-      <div className="glass-strong rounded-2xl p-7 relative overflow-hidden h-full group/card hover:bg-white/[0.14] transition-all duration-500">
+    <div className="testimonial-card-item flex-shrink-0 w-[320px] sm:w-[360px] md:w-[400px] px-2.5">
+      <div className="glass-strong rounded-2xl p-6 relative overflow-hidden h-full group/card hover:bg-white/[0.14] transition-all duration-500">
         {/* Glass highlights */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00B0F0]/25 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/15 to-transparent" />
         <div className="absolute inset-0 grid-pattern opacity-[0.04]" />
 
         {/* Quote icon */}
-        <div className="mb-5">
-          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${testimonialColors[idx]} flex items-center justify-center shadow-lg`}
+        <div className="mb-4">
+          <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${testimonialColors[idx]} flex items-center justify-center shadow-lg`}
             style={{ boxShadow: `0 4px 20px ${idx % 2 === 0 ? 'rgba(0,176,240,0.25)' : 'rgba(0,42,92,0.25)'}` }}>
-            <Quote className="w-5 h-5 text-white" />
+            <Quote className="w-4 h-4 text-white" />
           </div>
         </div>
 
         {/* Stars */}
-        <div className="flex items-center gap-0.5 mb-4">
+        <div className="flex items-center gap-0.5 mb-3">
           {[...Array(5)].map((_, i) => (
-            <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.3)]" />
+            <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.3)]" />
           ))}
         </div>
 
         {/* Text */}
-        <p className="text-[15px] leading-[1.85] text-white/90 mb-6 min-h-[100px]">
+        <p className="text-[13.5px] sm:text-[14px] leading-[1.8] text-white/90 mb-5 min-h-[88px]">
           &ldquo;{t(`testimonial_${idx + 1}_text` as TranslationKey)}&rdquo;
         </p>
 
         {/* Author */}
-        <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/[0.08]">
-          <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${testimonialColors[idx]} flex items-center justify-center text-white font-bold text-base shadow-md`}>
+        <div className="flex items-center gap-3 mt-auto pt-3 border-t border-white/[0.08]">
+          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${testimonialColors[idx]} flex items-center justify-center text-white font-bold text-sm shadow-md`}>
             {t(`testimonial_${idx + 1}_name` as TranslationKey).charAt(0)}
           </div>
-          <div>
-            <div className="font-bold text-white text-[13px]">{t(`testimonial_${idx + 1}_name` as TranslationKey)}</div>
-            <div className="text-white/45 text-[12px]">{t(`testimonial_${idx + 1}_role` as TranslationKey)}</div>
+          <div className="min-w-0">
+            <div className="font-bold text-white text-[12.5px] truncate">{t(`testimonial_${idx + 1}_name` as TranslationKey)}</div>
+            <div className="text-white/45 text-[11px] truncate">{t(`testimonial_${idx + 1}_role` as TranslationKey)}</div>
           </div>
         </div>
       </div>
@@ -196,27 +195,17 @@ function TestimonialCarousel() {
   );
 
   return (
-    <div className="relative" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+    <div className="relative w-full">
       {/* Gradient fade on edges */}
-      <div className="relative">
-        {/* Left fade */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-[#001529] to-transparent z-10 pointer-events-none" />
-        {/* Right fade */}
-        <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-[#001529] to-transparent z-10 pointer-events-none" />
+      <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-20 md:w-28 bg-gradient-to-r from-[#001529] via-[#001529]/60 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-20 md:w-28 bg-gradient-to-l from-[#001529] via-[#001529]/60 to-transparent z-10 pointer-events-none" />
 
-        {/* Scrolling track */}
-        <div className="overflow-hidden">
-          <div
-            className={`flex gap-0 ${isPaused ? '' : 'testimonial-scroll-track'}`}
-            style={{
-              width: 'max-content',
-              ...(isPaused ? { animationPlayState: 'paused' } : {}),
-            }}
-          >
-            {items.map((item) => (
-              <Card key={item.key} idx={item.index} />
-            ))}
-          </div>
+      {/* Full-width scrolling track — never stops */}
+      <div className="overflow-hidden w-full">
+        <div className="flex testimonial-scroll-track" style={{ width: 'max-content' }}>
+          {items.map((item) => (
+            <Card key={item.key} idx={item.index} />
+          ))}
         </div>
       </div>
     </div>
@@ -531,8 +520,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* ===== TESTIMONIALS — 3D Auto-Scrolling Carousel ===== */}
-      <section className="py-24 lg:py-32 relative overflow-hidden"
+      {/* ===== TESTIMONIALS — Full-Width Infinite Scroll Ticker ===== */}
+      <section className="py-20 lg:py-28 relative overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #001529 0%, #002A5C 30%, #003d7a 60%, #002A5C 100%)' }}>
         {/* 3D Background Scene */}
         <div className="absolute inset-0 scene-3d pointer-events-none">
@@ -547,9 +536,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         <ParticleField count={20} />
         <div className="absolute inset-0 grid-pattern opacity-[0.25]" />
 
-        <div className="relative max-w-5xl mx-auto px-6 lg:px-8">
+        {/* Heading — centered */}
+        <div className="relative max-w-5xl mx-auto px-6 lg:px-8 mb-12">
           <FadeIn>
-            <div className="text-center mb-12">
+            <div className="text-center">
               <span className="inline-flex items-center gap-2 text-[#00D4FF] text-sm font-bold uppercase tracking-wider mb-3">
                 <Star className="w-4 h-4 fill-[#00D4FF] text-[#00D4FF]" />
                 {isRTL ? 'آراء عملائنا' : 'Témoignages'}
@@ -559,9 +549,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </h2>
             </div>
           </FadeIn>
+        </div>
 
-          {/* Carousel */}
-          <TestimonialCarousel />
+        {/* Full-width ticker — no container constraint */}
+        <div className="relative">
+          <TestimonialTicker />
         </div>
       </section>
 

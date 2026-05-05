@@ -518,23 +518,32 @@ body {
   animation: holo-shift 6s ease infinite;
 }
 
-/* ===== TESTIMONIAL INFINITE SCROLL ===== */
+/* ===== TESTIMONIAL INFINITE SCROLL — FULL WIDTH ===== */
 @keyframes testimonial-scroll {
   0% { transform: translateX(0); }
-  100% { transform: translateX(calc(-1 * (380px * 8))); }
+  100% { transform: translateX(calc(-1 * (400px * 8))); }
 }
 
 .testimonial-scroll-track {
-  animation: testimonial-scroll 40s linear infinite;
+  animation: testimonial-scroll 50s linear infinite;
 }
 
-.testimonial-scroll-track:hover {
-  animation-play-state: paused;
+@media (max-width: 768px) {
+  @keyframes testimonial-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-1 * (360px * 8))); }
+  }
+  .testimonial-scroll-track {
+    animation-duration: 45s;
+  }
 }
 
 @media (max-width: 640px) {
   @keyframes testimonial-scroll {
     0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-1 * (340px * 8))); }
+    100% { transform: translateX(calc(-1 * (320px * 8))); }
+  }
+  .testimonial-scroll-track {
+    animation-duration: 40s;
   }
 }
