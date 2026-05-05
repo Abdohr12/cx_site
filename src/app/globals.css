@@ -518,35 +518,5 @@ body {
   animation: holo-shift 6s ease infinite;
 }
 
-/* ===== TESTIMONIAL SINGLE-ROW INFINITE TICKER ===== */
-
-/* Scrolls RIGHT — enters from LEFT side, exits from RIGHT side */
-/* Card widths must match Tailwind exactly: <640px=280px, 640-1023px=340px, ≥1024px=400px */
-@keyframes scroll-right {
-  0% { transform: translateX(calc(-1 * (400px * 8))); }
-  100% { transform: translateX(0); }
-}
-
-.testimonial-scroll-left {
-  animation: scroll-right 55s linear infinite;
-}
-
-@media (max-width: 1023px) {
-  @keyframes scroll-right {
-    0% { transform: translateX(calc(-1 * (340px * 8))); }
-    100% { transform: translateX(0); }
-  }
-  .testimonial-scroll-left {
-    animation-duration: 45s;
-  }
-}
-
-@media (max-width: 639px) {
-  @keyframes scroll-right {
-    0% { transform: translateX(calc(-1 * (280px * 8))); }
-    100% { transform: translateX(0); }
-  }
-  .testimonial-scroll-left {
-    animation-duration: 38s;
-  }
-}
+/* ===== TESTIMONIAL TICKER ===== */
+/* JS-based requestAnimationFrame — no CSS keyframes needed */

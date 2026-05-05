@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useInView, useMotionValue, useTransform } from 'framer-motion';
-import { useRef, MouseEvent } from 'react';
+import { useRef, useEffect, MouseEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -134,9 +134,10 @@ function ParticleField({ count = 15 }: { count?: number }) {
   );
 }
 
-/* ===== Testimonial Single-Row Infinite Scroll Ticker ===== */
+/* ===== Testimonial Single-Row Infinite Scroll Ticker (JS-based) ===== */
 function TestimonialTicker() {
-  const { t, isRTL } = useLang();
+  const { t } = useLang();
+  const trackRef = useRef<HTMLDivElement>(null);
   const total = 8;
 
   const testimonialColors = [
@@ -146,7 +147,7 @@ function TestimonialTicker() {
   ];
 
   const Card = ({ idx }: { idx: number }) => (
-    <div className="testimonial-card-item flex-shrink-0 w-[280px] sm:w-[340px] lg:w-[400px] px-2.5">
+    <div className="flex-shrink-0 w-[280px] sm:w-[340px] lg:w-[400px] px-2.5">
       <div className="glass-strong rounded-2xl p-5 sm:p-6 relative overflow-hidden h-full group/card hover:bg-white/[0.14] transition-all duration-500">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00B0F0]/25 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/15 to-transparent" />
@@ -182,15 +183,57 @@ function TestimonialTicker() {
     </div>
   );
 
-  // Many copies for seamless infinite loop — reviews keep repeating forever
+  // Build 5 copies for seamless loop
   const items = Array.from({ length: total * 5 }, (_, i) => ({ index: i % total, key: i }));
+
+  // JS-based infinite scroll using requestAnimationFrame
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    let offset = 0;
+    let speed = 0.5; // pixels per frame
+    let animId: number;
+    let cardWidth = 400; // default desktop
+
+    const updateCardWidth = () => {
+      if (window.innerWidth < 640) cardWidth = 280;
+      else if (window.innerWidth < 1024) cardWidth = 340;
+      else cardWidth = 400;
+    };
+
+    updateCardWidth();
+    window.addEventListener('resize', updateCardWidth);
+
+    const scroll = () => {
+      offset += speed;
+
+      // One full set = total cards × card width
+      const oneSetWidth = total * cardWidth;
+
+      // Reset offset when one full set has scrolled past
+      if (offset >= oneSetWidth) {
+        offset -= oneSetWidth;
+      }
+
+      track.style.transform = `translateX(${-offset}px)`;
+      animId = requestAnimationFrame(scroll);
+    };
+
+    animId = requestAnimationFrame(scroll);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', updateCardWidth);
+    };
+  }, []);
 
   return (
     <div className="relative w-full">
       <div className="absolute left-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-r from-[#001529] to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-l from-[#001529] to-transparent z-10 pointer-events-none" />
       <div className="overflow-hidden w-full">
-        <div className="flex testimonial-scroll-left" style={{ width: 'max-content' }}>
+        <div ref={trackRef} className="flex" style={{ width: 'max-content', willChange: 'transform' }}>
           {items.map((item) => (
             <Card key={item.key} idx={item.index} />
           ))}
