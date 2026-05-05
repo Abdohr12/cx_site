@@ -121,15 +121,7 @@ function ParticleField() {
   );
 }
 
-/* ===== Animated Glowing Input Wrapper ===== */
-function GlowInput({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="relative group/input">
-      <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-[#00B0F0]/0 via-[#00B0F0]/0 to-[#00D4FF]/0 group-focus-within/input:from-[#00B0F0]/60 group-focus-within/input:via-[#00D4FF]/40 group-focus-within/input:to-[#00B0F0]/60 opacity-0 group-focus-within/input:opacity-100 blur-sm transition-all duration-500 rounded-xl" />
-      {children}
-    </div>
-  );
-}
+
 
 export default function ContactPage() {
   const { t } = useLang();
@@ -568,68 +560,59 @@ export default function ContactPage() {
                     <form onSubmit={handleSubmit} className="space-y-5 relative">
                       {/* Name & Email */}
                       <div className="grid sm:grid-cols-2 gap-5">
-                        <GlowInput>
-                          <div>
-                            <label className="block text-[13px] font-bold text-white/80 mb-2">{t('form_name')}</label>
-                            <input
-                              id="name"
-                              required
-                              value={form.name}
-                              onChange={(e) => setForm({ ...form, name: e.target.value })}
-                              className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] focus:border-[#00B0F0]/60 focus:bg-white/[0.08] h-12 px-4 text-white text-[14px] outline-none transition-all duration-300 placeholder:text-white/30 backdrop-blur-sm"
-                              placeholder={t('form_name').replace(' *', '')}
-                            />
-                          </div>
-                        </GlowInput>
-                        <GlowInput>
-                          <div>
-                            <label className="block text-[13px] font-bold text-white/80 mb-2">{t('form_email')}</label>
-                            <input
-                              id="email"
-                              type="email"
-                              required
-                              dir="ltr"
-                              value={form.email}
-                              onChange={(e) => setForm({ ...form, email: e.target.value })}
-                              className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] focus:border-[#00B0F0]/60 focus:bg-white/[0.08] h-12 px-4 text-white text-[14px] outline-none transition-all duration-300 placeholder:text-white/30 backdrop-blur-sm"
-                              placeholder="email@example.com"
-                            />
-                          </div>
-                        </GlowInput>
+                        <div>
+                          <label className="block text-[13px] font-bold text-white/80 mb-2">{t('form_name')}</label>
+                          <input
+                            id="name"
+                            required
+                            value={form.name}
+                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                            className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] h-12 px-4 text-white text-[14px] outline-none placeholder:text-white/30 backdrop-blur-sm"
+                            placeholder={t('form_name').replace(' *', '')
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[13px] font-bold text-white/80 mb-2">{t('form_email')}</label>
+                          <input
+                            id="email"
+                            type="email"
+                            required
+                            dir="ltr"
+                            value={form.email}
+                            onChange={(e) => setForm({ ...form, email: e.target.value })}
+                            className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] h-12 px-4 text-white text-[14px] outline-none placeholder:text-white/30 backdrop-blur-sm"
+                            placeholder="email@example.com"
+                          />
+                        </div>
                       </div>
 
                       {/* Phone & Company */}
                       <div className="grid sm:grid-cols-2 gap-5">
-                        <GlowInput>
-                          <div>
-                            <label className="block text-[13px] font-bold text-white/80 mb-2">{t('form_phone')}</label>
-                            <input
-                              id="phone"
-                              type="tel"
-                              dir="ltr"
-                              value={form.phone}
-                              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                              className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] focus:border-[#00B0F0]/60 focus:bg-white/[0.08] h-12 px-4 text-white text-[14px] outline-none transition-all duration-300 placeholder:text-white/30 backdrop-blur-sm"
-                              placeholder="+212 6XX XXX XXX"
-                            />
-                          </div>
-                        </GlowInput>
-                        <GlowInput>
-                          <div>
-                            <label className="block text-[13px] font-bold text-white/80 mb-2">{t('form_company')}</label>
-                            <input
-                              id="company"
-                              value={form.company}
-                              onChange={(e) => setForm({ ...form, company: e.target.value })}
-                              className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] focus:border-[#00B0F0]/60 focus:bg-white/[0.08] h-12 px-4 text-white text-[14px] outline-none transition-all duration-300 placeholder:text-white/30 backdrop-blur-sm"
-                              placeholder={t('form_company')}
-                            />
-                          </div>
-                        </GlowInput>
+                        <div>
+                          <label className="block text-[13px] font-bold text-white/80 mb-2">{t('form_phone')}</label>
+                          <input
+                            id="phone"
+                            type="tel"
+                            dir="ltr"
+                            value={form.phone}
+                            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                            className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] h-12 px-4 text-white text-[14px] outline-none placeholder:text-white/30 backdrop-blur-sm"
+                            placeholder="+212 6XX XXX XXX"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[13px] font-bold text-white/80 mb-2">{t('form_company')}</label>
+                          <input
+                            id="company"
+                            value={form.company}
+                            onChange={(e) => setForm({ ...form, company: e.target.value })}
+                            className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] h-12 px-4 text-white text-[14px] outline-none placeholder:text-white/30 backdrop-blur-sm"
+                            placeholder={t('form_company')}
+                          />
+                        </div>
                       </div>
 
                       {/* Message */}
-                      <GlowInput>
                         <div>
                           <label className="block text-[13px] font-bold text-white/80 mb-2">{t('form_message')}</label>
                           <textarea
@@ -638,11 +621,10 @@ export default function ContactPage() {
                             rows={5}
                             value={form.message}
                             onChange={(e) => setForm({ ...form, message: e.target.value })}
-                            className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] focus:border-[#00B0F0]/60 focus:bg-white/[0.08] px-4 py-3 text-white text-[14px] outline-none transition-all duration-300 resize-none placeholder:text-white/30 leading-relaxed backdrop-blur-sm"
+                            className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] px-4 py-3 text-white text-[14px] outline-none resize-none placeholder:text-white/30 leading-relaxed backdrop-blur-sm"
                             placeholder={t('form_message').replace(' *', '')}
                           />
                         </div>
-                      </GlowInput>
 
                       {/* Submit buttons */}
                       <div className="flex flex-col sm:flex-row gap-3 pt-3">
