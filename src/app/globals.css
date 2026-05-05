@@ -518,54 +518,34 @@ body {
   animation: holo-shift 6s ease infinite;
 }
 
-/* ===== TESTIMONIAL TWO-ROW CIRCULAR TICKER ===== */
+/* ===== TESTIMONIAL SINGLE-ROW INFINITE TICKER ===== */
 
-/* Row 1: scrolls LEFT (right → left), shifts by 4 cards */
+/* Scrolls LEFT continuously — shifts by 8 cards (one full set) then loops */
 @keyframes scroll-left {
   0% { transform: translateX(0); }
-  100% { transform: translateX(calc(-1 * (400px * 4))); }
-}
-
-/* Row 2: scrolls RIGHT (left → right), starts shifted left then goes to 0 */
-@keyframes scroll-right {
-  0% { transform: translateX(calc(-1 * (400px * 4))); }
-  100% { transform: translateX(0); }
+  100% { transform: translateX(calc(-1 * (400px * 8))); }
 }
 
 .testimonial-scroll-left {
-  animation: scroll-left 35s linear infinite;
-}
-
-.testimonial-scroll-right {
-  animation: scroll-right 35s linear infinite;
+  animation: scroll-left 60s linear infinite;
 }
 
 @media (max-width: 768px) {
   @keyframes scroll-left {
     0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-1 * (340px * 4))); }
+    100% { transform: translateX(calc(-1 * (340px * 8))); }
   }
-  @keyframes scroll-right {
-    0% { transform: translateX(calc(-1 * (340px * 4))); }
-    100% { transform: translateX(0); }
-  }
-  .testimonial-scroll-left,
-  .testimonial-scroll-right {
-    animation-duration: 30s;
+  .testimonial-scroll-left {
+    animation-duration: 50s;
   }
 }
 
 @media (max-width: 640px) {
   @keyframes scroll-left {
     0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-1 * (300px * 4))); }
+    100% { transform: translateX(calc(-1 * (300px * 8))); }
   }
-  @keyframes scroll-right {
-    0% { transform: translateX(calc(-1 * (300px * 4))); }
-    100% { transform: translateX(0); }
-  }
-  .testimonial-scroll-left,
-  .testimonial-scroll-right {
-    animation-duration: 25s;
+  .testimonial-scroll-left {
+    animation-duration: 40s;
   }
 }

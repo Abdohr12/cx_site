@@ -134,10 +134,10 @@ function ParticleField({ count = 15 }: { count?: number }) {
   );
 }
 
-/* ===== Testimonial Two-Row Circular Ticker ===== */
+/* ===== Testimonial Single-Row Infinite Scroll Ticker ===== */
 function TestimonialTicker() {
   const { t, isRTL } = useLang();
-  const perRow = 4;
+  const total = 8;
 
   const testimonialColors = [
     'from-[#00B0F0] to-[#0098d4]', 'from-[#002A5C] to-[#004d8a]', 'from-[#00B0F0] to-[#0088cc]',
@@ -145,7 +145,6 @@ function TestimonialTicker() {
     'from-[#00B0F0] to-[#0098d4]', 'from-[#004d8a] to-[#002A5C]',
   ];
 
-  // Card component
   const Card = ({ idx }: { idx: number }) => (
     <div className="testimonial-card-item flex-shrink-0 w-[300px] sm:w-[340px] md:w-[380px] lg:w-[400px] px-2.5">
       <div className="glass-strong rounded-2xl p-5 sm:p-6 relative overflow-hidden h-full group/card hover:bg-white/[0.14] transition-all duration-500">
@@ -183,35 +182,18 @@ function TestimonialTicker() {
     </div>
   );
 
-  // Build 4 copies of each row's cards for seamless loop
-  const row1Items = Array.from({ length: perRow * 5 }, (_, i) => ({ index: i % perRow, key: `r1-${i}` }));
-  const row2Items = Array.from({ length: perRow * 5 }, (_, i) => ({ index: perRow + (i % perRow), key: `r2-${i}` }));
+  // Many copies for seamless infinite loop — reviews keep repeating forever
+  const items = Array.from({ length: total * 5 }, (_, i) => ({ index: i % total, key: i }));
 
   return (
-    <div className="relative w-full space-y-4">
-      {/* Row 1 — scrolls LEFT (→←) */}
-      <div className="relative">
-        <div className="absolute left-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-r from-[#001529] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-l from-[#001529] to-transparent z-10 pointer-events-none" />
-        <div className="overflow-hidden w-full">
-          <div className="flex testimonial-scroll-left" style={{ width: 'max-content' }}>
-            {row1Items.map((item) => (
-              <Card key={item.key} idx={item.index} />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Row 2 — scrolls RIGHT (←→) */}
-      <div className="relative">
-        <div className="absolute left-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-r from-[#001529] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-l from-[#001529] to-transparent z-10 pointer-events-none" />
-        <div className="overflow-hidden w-full">
-          <div className="flex testimonial-scroll-right" style={{ width: 'max-content' }}>
-            {row2Items.map((item) => (
-              <Card key={item.key} idx={item.index} />
-            ))}
-          </div>
+    <div className="relative w-full">
+      <div className="absolute left-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-r from-[#001529] to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-l from-[#001529] to-transparent z-10 pointer-events-none" />
+      <div className="overflow-hidden w-full">
+        <div className="flex testimonial-scroll-left" style={{ width: 'max-content' }}>
+          {items.map((item) => (
+            <Card key={item.key} idx={item.index} />
+          ))}
         </div>
       </div>
     </div>
