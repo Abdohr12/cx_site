@@ -213,13 +213,17 @@ function TestimonialTicker() {
       const cardWidth = firstCard.offsetWidth;
       const oneSetWidth = cardWidth * total;
 
-      let offset = 0;
+      if (oneSetWidth <= 0) return;
+
+      // Start with one set-width shifted LEFT so cards are pre-positioned off-screen
+      // ready to enter from the left edge of the container
+      let offset = -oneSetWidth;
       const speed = 0.6; // px per frame
 
       const scroll = () => {
-        // Move track RIGHT: positive translateX = cards enter from LEFT
         offset += speed;
-        if (offset >= oneSetWidth) {
+        // When we've scrolled a full set-width, reset to keep it seamless
+        if (offset >= 0) {
           offset = offset - oneSetWidth;
         }
         track.style.transform = `translateX(${offset}px)`;
