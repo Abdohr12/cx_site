@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useInView, useMotionValue, useTransform } from 'framer-motion';
-import { useRef, useEffect, MouseEvent } from 'react';
+import { useRef, useState, useEffect, MouseEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -113,6 +113,13 @@ function FloatingCube({ size = 50, color = '#00B0F0', className = '' }: { size?:
 
 /* ===== 3D Particle Field ===== */
 function ParticleField({ count = 15 }: { count?: number }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  if (!mounted) {
+    return <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ perspective: 800 }} />;
+  }
+
   const particles = Array.from({ length: count }, (_, i) => ({
     id: i, x: Math.random() * 100, y: Math.random() * 100,
     size: Math.random() * 4 + 2, duration: Math.random() * 6 + 4,
