@@ -146,7 +146,7 @@ function TestimonialTicker() {
   ];
 
   const Card = ({ idx }: { idx: number }) => (
-    <div className="testimonial-card-item flex-shrink-0 w-[300px] sm:w-[340px] md:w-[380px] lg:w-[400px] px-2.5">
+    <div className="testimonial-card-item flex-shrink-0 w-[280px] sm:w-[340px] lg:w-[400px] px-2.5">
       <div className="glass-strong rounded-2xl p-5 sm:p-6 relative overflow-hidden h-full group/card hover:bg-white/[0.14] transition-all duration-500">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00B0F0]/25 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/15 to-transparent" />
