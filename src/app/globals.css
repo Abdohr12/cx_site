@@ -518,5 +518,24 @@ body {
   animation: holo-shift 6s ease infinite;
 }
 
-/* ===== TESTIMONIAL TICKER ===== */
-/* JS-based requestAnimationFrame — no CSS keyframes needed */
+/* ===== TESTIMONIAL MARQUEE ===== */
+/* LTR: cards scroll left (translateX goes from 0 to -50%)
+   Since the track has 2 copies, -50% = exactly one full set */
+@keyframes marquee-ltr {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* RTL: cards scroll right (translateX goes from 0 to +50%) */
+@keyframes marquee-rtl {
+  from { transform: translateX(0); }
+  to { transform: translateX(50%); }
+}
+
+.marquee-track-ltr {
+  animation: marquee-ltr 40s linear infinite;
+}
+
+.marquee-track-rtl {
+  animation: marquee-rtl 40s linear infinite;
+}

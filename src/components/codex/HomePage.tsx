@@ -141,11 +141,9 @@ function ParticleField({ count = 15 }: { count?: number }) {
   );
 }
 
-/* ===== Testimonial Infinite Scroll Ticker (JS-based, RTL/LTR aware) ===== */
+/* ===== Testimonial Infinite Scroll Ticker (Pure CSS, RTL/LTR) ===== */
 function TestimonialTicker() {
   const { t, isRTL } = useLang();
-  const trackRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const total = 8;
 
   const testimonialColors = [
@@ -191,71 +189,24 @@ function TestimonialTicker() {
     </div>
   );
 
-  // Only 2 copies: original + 1 clone = enough for seamless infinite loop
+  // Exactly 2 copies: original (8) + clone (8) = 16 cards total
+  // The CSS animation scrolls by -50% (LTR) or +50% (RTL), which = exactly one full set
   const items = Array.from({ length: total * 2 }, (_, i) => ({ index: i % total, key: i }));
 
-  // JS infinite scroll — direction-aware for RTL/LTR
-  useEffect(() => {
-    const track = trackRef.current;
-    const container = containerRef.current;
-    if (!track || !container) return;
-
-    let animId: number;
-    let running = false;
-
-    const startScroll = () => {
-      if (running) return;
-      running = true;
-
-      const firstCard = track.querySelector('[data-card]') as HTMLElement;
-      if (!firstCard) return;
-      const cardWidth = firstCard.offsetWidth;
-      const oneSetWidth = cardWidth * total;
-
-      if (oneSetWidth <= 0) return;
-
-      // RTL: cards scroll right → left (negative direction)
-      // LTR: cards scroll left → right (positive direction)
-      const speed = 0.6;
-      const dir = isRTL ? -1 : 1;
-
-      // LTR starts shifted left so clone fills viewport, scrolls toward 0
-      // RTL starts at 0 so original fills viewport, scrolls toward -oneSetWidth
-      let offset = isRTL ? 0 : -oneSetWidth;
-
-      const scroll = () => {
-        offset += speed * dir;
-
-        // Reset when we've scrolled exactly one full set-width
-        if (isRTL) {
-          if (offset <= -oneSetWidth) offset += oneSetWidth;
-        } else {
-          if (offset >= 0) offset -= oneSetWidth;
-        }
-
-        track.style.transform = `translateX(${offset}px)`;
-        animId = requestAnimationFrame(scroll);
-      };
-
-      animId = requestAnimationFrame(scroll);
-    };
-
-    // Wait for layout + Tailwind responsive classes
-    const timer = setTimeout(startScroll, 200);
-
-    return () => {
-      clearTimeout(timer);
-      cancelAnimationFrame(animId);
-      running = false;
-    };
-  }, [isRTL]);
-
   return (
-    <div className="relative w-full" ref={containerRef}>
+    <div className="relative w-full">
+      {/* Fade edges */}
       <div className="absolute left-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-r from-[#001529] to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-l from-[#001529] to-transparent z-10 pointer-events-none" />
+
+      {/* Marquee container */}
       <div className="overflow-hidden w-full">
-        <div ref={trackRef} className="flex" style={{ width: 'max-content', willChange: 'transform', direction: 'ltr' }}>
+        {/* Track: direction:ltr prevents RTL from reversing flex order.
+            CSS animation class handles LTR vs RTL scrolling direction. */}
+        <div
+          className={`flex ${isRTL ? 'marquee-track-rtl' : 'marquee-track-ltr'}`}
+          style={{ width: 'max-content', direction: 'ltr' }}
+        >
           {items.map((item) => (
             <Card key={item.key} idx={item.index} />
           ))}
