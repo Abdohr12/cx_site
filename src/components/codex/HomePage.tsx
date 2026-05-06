@@ -141,9 +141,9 @@ function ParticleField({ count = 15 }: { count?: number }) {
   );
 }
 
-/* ===== Testimonial Single-Row Infinite Scroll Ticker (JS-based) ===== */
+/* ===== Testimonial Infinite Scroll Ticker (JS-based, RTL/LTR aware) ===== */
 function TestimonialTicker() {
-  const { t } = useLang();
+  const { t, isRTL } = useLang();
   const trackRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const total = 8;
@@ -191,10 +191,10 @@ function TestimonialTicker() {
     </div>
   );
 
-  // 5 copies for seamless loop
-  const items = Array.from({ length: total * 5 }, (_, i) => ({ index: i % total, key: i }));
+  // Only 2 copies: original + 1 clone = enough for seamless infinite loop
+  const items = Array.from({ length: total * 2 }, (_, i) => ({ index: i % total, key: i }));
 
-  // JS infinite scroll — measures actual DOM widths for perfect loop
+  // JS infinite scroll — direction-aware for RTL/LTR
   useEffect(() => {
     const track = trackRef.current;
     const container = containerRef.current;
@@ -207,7 +207,6 @@ function TestimonialTicker() {
       if (running) return;
       running = true;
 
-      // Measure actual card width from DOM
       const firstCard = track.querySelector('[data-card]') as HTMLElement;
       if (!firstCard) return;
       const cardWidth = firstCard.offsetWidth;
@@ -215,17 +214,25 @@ function TestimonialTicker() {
 
       if (oneSetWidth <= 0) return;
 
-      // Start with one set-width shifted LEFT so cards are pre-positioned off-screen
-      // ready to enter from the left edge of the container
-      let offset = -oneSetWidth;
-      const speed = 0.6; // px per frame
+      // RTL: cards scroll right → left (negative direction)
+      // LTR: cards scroll left → right (positive direction)
+      const speed = 0.6;
+      const dir = isRTL ? -1 : 1;
+
+      // LTR starts shifted left so clone fills viewport, scrolls toward 0
+      // RTL starts at 0 so original fills viewport, scrolls toward -oneSetWidth
+      let offset = isRTL ? 0 : -oneSetWidth;
 
       const scroll = () => {
-        offset += speed;
-        // When we've scrolled a full set-width, reset to keep it seamless
-        if (offset >= 0) {
-          offset = offset - oneSetWidth;
+        offset += speed * dir;
+
+        // Reset when we've scrolled exactly one full set-width
+        if (isRTL) {
+          if (offset <= -oneSetWidth) offset += oneSetWidth;
+        } else {
+          if (offset >= 0) offset -= oneSetWidth;
         }
+
         track.style.transform = `translateX(${offset}px)`;
         animId = requestAnimationFrame(scroll);
       };
@@ -233,7 +240,7 @@ function TestimonialTicker() {
       animId = requestAnimationFrame(scroll);
     };
 
-    // Wait for layout + Tailwind responsive classes to apply
+    // Wait for layout + Tailwind responsive classes
     const timer = setTimeout(startScroll, 200);
 
     return () => {
@@ -241,7 +248,7 @@ function TestimonialTicker() {
       cancelAnimationFrame(animId);
       running = false;
     };
-  }, []);
+  }, [isRTL]);
 
   return (
     <div className="relative w-full" ref={containerRef}>
