@@ -438,7 +438,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
           </FadeIn>
 
           {/* Pricing Grid — 3 columns */}
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-7 items-center max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-7 max-w-6xl mx-auto">
             {plans.map((plan, i) => (
               <FadeIn key={i} delay={i * 0.12}>
                 <TiltCard>
@@ -539,7 +539,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
                       </ul>
 
                       {/* CTA Button */}
-                      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="mt-auto pt-2">
                         <Button
                           onClick={() => onNavigate('contact')}
                           className={`w-full font-bold rounded-2xl py-3.5 cursor-pointer transition-all duration-300 text-[15px] ${
