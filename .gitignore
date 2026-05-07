@@ -10,3 +10,8 @@ dev.log
 *.log
 upload/
 .vercel
+
+# Database files — never commit to Git
+db/*.db
+db/*.db-journal
+db/*.db-wal

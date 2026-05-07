@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const FORMSPREE_ENDPOINT = process.env.FORMSPREE_ENDPOINT || 'https://formspree.io/f/mlgzbdgp';
+const FORMSPREE_ENDPOINT = process.env.FORMSPREE_ENDPOINT;
+
+if (!FORMSPREE_ENDPOINT) {
+  throw new Error('FORMSPREE_ENDPOINT is not configured in environment variables.');
+}
 
 // ===== 1. Rate Limiting (In-memory) =====
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
