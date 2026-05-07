@@ -136,6 +136,17 @@ export default function ContactPage() {
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' });
+  const [csrfToken, setCsrfToken] = useState('');
+
+  // Fetch CSRF token on mount
+  useEffect(() => {
+    fetch('/api/contact')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.csrfToken) setCsrfToken(data.csrfToken);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,7 +157,7 @@ export default function ContactPage() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, csrfToken }),
       });
       const data = await res.json();
 
@@ -157,6 +168,11 @@ export default function ContactPage() {
       } else {
         setError(data.message || 'Error');
       }
+
+      // Fetch new CSRF token after each request
+      const tokenRes = await fetch('/api/contact');
+      const tokenData = await tokenRes.json();
+      if (tokenData.csrfToken) setCsrfToken(tokenData.csrfToken);
     } catch {
       setError('Error');
     } finally {
