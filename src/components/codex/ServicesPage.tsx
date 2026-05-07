@@ -421,8 +421,8 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
         {/* Large ambient orb glow behind cards */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#00B0F0]/[0.06] rounded-full blur-[160px] pointer-events-none" />
 
-        {/* Section content */}
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+        {/* Section content — extra padding-top for badges that overflow above cards */}
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 pt-4">
           {/* Header */}
           <FadeIn className="text-center mb-16 lg:mb-20">
             <span className="inline-flex items-center gap-2.5 text-[#00D4FF] text-sm font-bold mb-3 uppercase tracking-wider">
@@ -437,31 +437,32 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
             </p>
           </FadeIn>
 
-          {/* Pricing Grid — 3 columns */}
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-7 max-w-6xl mx-auto">
+          {/* Pricing Grid — 3 columns, responsive + overflow visible for badges */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-7 max-w-6xl mx-auto overflow-visible">
             {plans.map((plan, i) => (
               <FadeIn key={i} delay={i * 0.12}>
-                <TiltCard>
+                <TiltCard className="overflow-visible">
                   <div
-                    className={`relative rounded-3xl overflow-hidden flex flex-col h-full ${
+                    className={`relative rounded-3xl overflow-visible flex flex-col h-full ${
                       plan.recommended
                         ? 'glass-strong glow-pulse-3d'
-                        : plan.isEnterprise
-                          ? 'glass'
-                          : 'glass'
+                        : 'glass'
                     }`}
                     style={{ transformStyle: 'preserve-3d' }}
                   >
-                    {/* Grid pattern overlay inside card */}
-                    <div className="absolute inset-0 grid-pattern opacity-[0.15] pointer-events-none" />
+                    {/* Inner card background with overflow hidden for effects */}
+                    <div className={`absolute inset-0 rounded-3xl overflow-hidden pointer-events-none`}>
+                      {/* Grid pattern overlay inside card */}
+                      <div className="absolute inset-0 grid-pattern opacity-[0.15]" />
 
-                    {/* Shimmer effect for recommended */}
-                    {plan.recommended && (
-                      <div className="absolute inset-0 shimmer pointer-events-none rounded-3xl" />
-                    )}
+                      {/* Shimmer effect for recommended */}
+                      {plan.recommended && (
+                        <div className="absolute inset-0 shimmer rounded-3xl" />
+                      )}
 
-                    {/* Glass highlight lines */}
-                    <GlassHighlightLines />
+                      {/* Glass highlight lines */}
+                      <GlassHighlightLines />
+                    </div>
 
                     {/* Badge */}
                     {plan.badge && (
