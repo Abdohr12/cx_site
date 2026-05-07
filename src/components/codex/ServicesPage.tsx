@@ -180,8 +180,8 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
 
   // Fallback enterprise features if translation key doesn't exist
   const enterpriseFeaturesFallback = lang === 'ar'
-    ? ['كل ما في الباقة السنوية', 'فريق مخصص لمشروعك', 'بنية تحتية مستقلة', 'SLA مخصص (99.9%)', 'تدريب الفريق', 'تكاملات مخصصة', 'دعم VIP أولوي']
-    : ['Tout dans le forfait Annuel', 'Équipe dédiée à votre projet', 'Infrastructure privée', 'SLA personnalisé (99.9%)', "Formation de l'équipe", 'Intégrations sur mesure', 'Support VIP prioritaire'];
+    ? ['فريق مخصص لمشروعك', 'بنية تحتية مستقلة', 'SLA مخصص (99.9%)', 'تكاملات مخصصة', 'دعم VIP أولوي']
+    : ['Équipe dédiée à votre projet', 'Infrastructure privée', 'SLA personnalisé (99.9%)', 'Intégrations sur mesure', 'Support VIP prioritaire'];
 
   const plans = [
     {
@@ -438,10 +438,10 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
           </FadeIn>
 
           {/* Pricing Grid — 3 columns */}
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-7 items-start max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-7 items-center max-w-6xl mx-auto">
             {plans.map((plan, i) => (
               <FadeIn key={i} delay={i * 0.12}>
-                <TiltCard className={plan.recommended ? 'md:-mt-6 md:mb-0' : ''}>
+                <TiltCard>
                   <div
                     className={`relative rounded-3xl overflow-hidden flex flex-col h-full ${
                       plan.recommended
@@ -504,9 +504,7 @@ export default function ServicesPage({ onNavigate }: ServicesPageProps) {
                       <div className={`mb-6 flex items-baseline gap-2 pb-6 border-b ${
                         plan.recommended ? 'border-white/15' : 'border-white/10'
                       }`}>
-                        <span className={`font-extrabold tracking-tight text-white ${
-                          plan.isEnterprise ? 'text-2xl' : 'text-4xl'
-                        }`}>
+                        <span className="font-extrabold tracking-tight text-white text-4xl">
                           {plan.price}
                         </span>
                         {plan.period && (
