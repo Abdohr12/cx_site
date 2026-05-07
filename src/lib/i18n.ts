@@ -13,23 +13,24 @@ export const translations = {
     lang_switch: 'FR',
 
     // Hero
-    hero_badge: 'الوكالة رقم 1 في المغرب للحلول الرقمية',
-    hero_title_1: 'نظّم شركتك',
-    hero_title_highlight: 'بذكاء',
+    hero_badge: 'وكالة برمجة في الدار البيضاء — الحلول الرقمية الاحترافية',
+    hero_title_1: 'وكالة برمجة',
+    hero_title_highlight: 'في الدار البيضاء',
     hero_title_2: 'مع',
-    hero_desc: 'حلول رقمية متكاملة مصممة خصيصاً للشركات المغربية الصغيرة والمتوسطة. وفّر الوقت، حسّن الإنتاجية، وركّز على اللي يهمك.',
-    hero_cta: 'جرب Codex مجاناً',
+    hero_desc: 'Codex — وكالة برمجة مغربية متخصصة في تطوير المواقع والتطبيقات والحلول الرقمية للشركات الصغيرة والمتوسطة. من الفكرة إلى الإطلاق.',
+    hero_cta: 'اطلب عرض مجاني',
     hero_cta2: 'شوف كيفاش كتخدم',
     hero_support: 'دعم تقني 24/7',
     hero_no_commit: 'بدون التزام',
-    hero_stat_month: 'إحصائيات الشهر',
-    hero_stat_period: 'هذا الشهر',
-    hero_stat_growth: 'نمو في الإنتاجية',
-    hero_stat_trainees: 'متدرب نشط',
-    hero_stat_sessions: 'حصة هاد الأسبوع',
+    hero_sp1: '+3',
+    hero_sp1_label: 'سنوات خبرة',
+    hero_sp2: '+50',
+    hero_sp2_label: 'مشروع منجز',
+    hero_sp3: '98%',
+    hero_sp3_label: 'رضا العملاء',
 
     // Trusted
-    trusted_title: 'أكثر من 50 شركة مغربية تثق في Codex',
+    trusted_title: '+50 شركة مغربية تثق في Codex',
     trusted_1: 'مراكز التكوين',
     trusted_2: 'الشركات الناشئة',
     trusted_3: 'المتاجر الإلكترونية',
@@ -39,12 +40,6 @@ export const translations = {
     features_badge: 'الميزات',
     features_title: 'كل اللي تحتاجه في مكان واحد',
     features_desc: 'أدوات قوية مصممة خصيصاً للشركات المغربية. سهلة الاستخدام، فعّالة، وموثوقة.',
-    feature_1_title: 'إدارة المتدربين',
-    feature_1_desc: 'تتبع حضور المتدربين، نقاطهم، وتقدمهم في مكان واحد. كلشي منظّم وسهل الاستخدام.',
-    feature_2_title: 'الجدولة الذكية',
-    feature_2_desc: 'نظّم الحصص والمواعيد تلقائياً بلا تعقيد. وفّر وقتك وركّز على اللي يهمك فعلاً.',
-    feature_3_title: 'تقارير مفصّلة',
-    feature_3_desc: 'احصل على تقارير واضحة تساعدك تتخذ قرارات أحسن. إحصائيات دقيقة في الوقت الحقيقي.',
 
     // Testimonials (8 reviews)
     testimonial_1_text: 'من وقت اللي بدأنا نستخدم Codex، الإنتاجية تزاودت بـ 200%. النظام سهل بزاف، والدعم التقني سريع ومتجاوب. أنصح أي شركة مغربية تجربهم.',
@@ -75,9 +70,10 @@ export const translations = {
     // CTA
     cta_title: 'جاهز تبدأ رحلتك الرقمية؟',
     cta_desc: 'انضم لأكثر من 50 شركة مغربية كتستفيد من حلول Codex الرقمية. ابدأ اليوم مجاناً!',
-    cta_btn: 'ابدأ مجاناً الآن',
-    cta_btn2: 'اطلع على الأسعار',
+    cta_btn: 'اطلب عرض مجاني',
+    cta_btn2: 'اتصل بنا مباشرة',
     cta_get_started: 'ابدأ اليوم',
+    cta_wa: 'تواصل عبر واتساب',
 
     // Services
     services_badge: 'خدماتنا',
@@ -104,6 +100,34 @@ export const translations = {
     svc_ecommerce_features: 'متاجر إلكترونية,دفع محلي,إدارة المخزون,تحليلات المبيعات',
     svc_design_features: 'UI/UX Design,تصميم الهوية,نماذج أولية,تصميم متجاوب',
     svc_support_features: 'دعم 24/7,صيانة دورية,تحديثات أمنية,نسخ احتياطي',
+
+    // Process
+    process_badge: 'طريقتنا في العمل',
+    process_title: 'كيفاش كنخدمو',
+    process_desc: 'من الفكرة إلى التسليم، كنتبع عملية واضحة ومنظمة باش نضمن أحسن النتائج لمشروعك.',
+    process_step_1_title: 'استكشاف',
+    process_step_1_desc: 'نفهمو مشروعك وأهدافك بشكل معمّق. نحللو احتياجاتك ونحددو أفضل الحلول التقنية المناسبة.',
+    process_step_2_title: 'تخطيط',
+    process_step_2_desc: 'نبنيو خطة عمل واضحة مع roadmap مفصّل. نحددو المراحل والمواعيد والتكاليف مسبقاً.',
+    process_step_3_title: 'تطوير',
+    process_step_3_desc: 'نصممو ونطورو بجودة عالية باستخدام أحدث التقنيات. كنديرولك تحديثات دورية على كل مرحلة.',
+    process_step_4_title: 'تسليم',
+    process_step_4_desc: 'نطلقو المشروع ونتابعو معاك لمدة طويلة. دعم تقني وصيانة مستمرة.',
+
+    // Stats
+    stats_years: '+3',
+    stats_projects: '+50',
+    stats_satisfaction: '98%',
+    stats_support: '24/7',
+    stats_years_label: 'سنوات خبرة',
+    stats_projects_label: 'مشروع منجز',
+    stats_satisfaction_label: 'رضا العملاء',
+    stats_support_label: 'دعم تقني',
+
+    // Team (Home)
+    team_home_badge: 'فريقنا',
+    team_home_title: 'الناس اللي وراء Codex',
+    team_home_desc: 'فريق شاب ومتحمس من المغرب، كاملين من مطورين ومصممين ومديرين مشاريع.',
 
     // Pricing
     pricing_badge: 'الأسعار',
@@ -201,7 +225,6 @@ export const translations = {
     contact_location: 'موقعنا',
     contact_open: 'مفتوح الآن',
 
-    // Footer
     // Portfolio
     portfolio_badge: 'أعمالنا',
     portfolio_title: 'مشاريع',
@@ -255,6 +278,8 @@ export const translations = {
     footer_services: 'خدماتنا',
     footer_contact: 'تواصل معنا',
     footer_copyright: 'جميع الحقوق محفوظة.',
+    footer_wa: 'واتساب',
+    footer_phone: '+212 600 000 000',
   },
   fr: {
     // Navbar
@@ -267,23 +292,24 @@ export const translations = {
     lang_switch: 'AR',
 
     // Hero
-    hero_badge: 'La N°1 des solutions digitales au Maroc',
-    hero_title_1: 'Organisez votre entreprise',
-    hero_title_highlight: 'intelligemment',
+    hero_badge: 'Agence de programmation à Casablanca — Solutions digitales professionnelles',
+    hero_title_1: 'Agence de programmation',
+    hero_title_highlight: 'à Casablanca',
     hero_title_2: 'avec',
-    hero_desc: "Solutions digitales intégrées conçues spécialement pour les PME marocaines. Gagnez du temps, améliorez la productivité et concentrez-vous sur l'essentiel.",
-    hero_cta: 'Essayez Codex gratuitement',
+    hero_desc: 'Codex — Agence de programmation marocaine spécialisée en développement de sites web, applications et solutions digitales pour les PME. De l\'idée au lancement.',
+    hero_cta: 'Demander un devis gratuit',
     hero_cta2: 'Voir comment ça marche',
     hero_support: 'Support technique 24/7',
     hero_no_commit: 'Sans engagement',
-    hero_stat_month: 'Statistiques du mois',
-    hero_stat_period: 'Ce mois',
-    hero_stat_growth: 'Croissance de productivité',
-    hero_stat_trainees: 'Stagiaires actifs',
-    hero_stat_sessions: 'Sessions cette semaine',
+    hero_sp1: '+3',
+    hero_sp1_label: "Ans d'expérience",
+    hero_sp2: '+50',
+    hero_sp2_label: 'Projets réalisés',
+    hero_sp3: '98%',
+    hero_sp3_label: 'Satisfaction client',
 
     // Trusted
-    trusted_title: 'Plus de 50 entreprises marocaines font confiance à Codex',
+    trusted_title: '+50 entreprises marocaines font confiance à Codex',
     trusted_1: 'Centres de formation',
     trusted_2: 'Startups',
     trusted_3: 'Boutiques en ligne',
@@ -293,12 +319,6 @@ export const translations = {
     features_badge: 'Fonctionnalités',
     features_title: 'Tout ce dont vous avez besoin en un seul endroit',
     features_desc: 'Des outils puissants conçus pour les entreprises marocaines. Faciles, efficaces et fiables.',
-    feature_1_title: 'Gestion des stagiaires',
-    feature_1_desc: 'Suivez la présence, les notes et la progression de vos stagiaires en un seul endroit.',
-    feature_2_title: 'Planification intelligente',
-    feature_2_desc: "Organisez automatiquement les cours et les rendez-vous. Gagnez du temps sur l'essentiel.",
-    feature_3_title: 'Rapports détaillés',
-    feature_3_desc: 'Obtenez des rapports clairs pour de meilleures décisions. Statistiques en temps réel.',
 
     // Testimonials (8 reviews)
     testimonial_1_text: "Depuis que nous utilisons Codex, la productivité a augmenté de 200%. Le système est très simple et le support rapide et réactif. Je recommande Codex à toute entreprise marocaine.",
@@ -329,9 +349,10 @@ export const translations = {
     // CTA
     cta_title: 'Prêt à commencer votre transformation digitale ?',
     cta_desc: 'Rejoignez plus de 50 entreprises marocaines qui bénéficient des solutions Codex. Commencez gratuitement !',
-    cta_btn: 'Commencer gratuitement',
-    cta_btn2: 'Voir les tarifs',
+    cta_btn: 'Demander un devis gratuit',
+    cta_btn2: 'Appelez-nous directement',
     cta_get_started: "Commencez aujourd'hui",
+    cta_wa: 'Contactez-nous sur WhatsApp',
 
     // Services
     services_badge: 'Nos Services',
@@ -358,6 +379,34 @@ export const translations = {
     svc_ecommerce_features: 'Boutiques en ligne,Paiement local,Gestion de stock,Analytics',
     svc_design_features: 'UI/UX Design,Identité visuelle,Prototypes,Design responsif',
     svc_support_features: 'Support 24/7,Maintenance,Mises à jour,Sauvegarde',
+
+    // Process
+    process_badge: 'Notre Processus',
+    process_title: 'Comment nous travaillons',
+    process_desc: "De l'idée à la livraison, nous suivons un processus clair et organisé pour garantir les meilleurs résultats pour votre projet.",
+    process_step_1_title: 'Découverte',
+    process_step_1_desc: 'Nous comprenons votre projet et vos objectifs en profondeur. Nous analysons vos besoins et définissons les meilleures solutions techniques.',
+    process_step_2_title: 'Planification',
+    process_step_2_desc: 'Nous construisons un plan de travail clair avec une roadmap détaillée. Nous définissons les phases, les délais et les coûts à l\'avance.',
+    process_step_3_title: 'Développement',
+    process_step_3_desc: "Nous concevons et développons avec des normes de qualité élevées en utilisant les dernières technologies. Mises à jour régulières à chaque étape.",
+    process_step_4_title: 'Livraison',
+    process_step_4_desc: 'Nous lançons le projet et vous accompagnons sur le long terme. Support technique et maintenance continue.',
+
+    // Stats
+    stats_years: '+3',
+    stats_projects: '+50',
+    stats_satisfaction: '98%',
+    stats_support: '24/7',
+    stats_years_label: "Ans d'expérience",
+    stats_projects_label: 'Projets réalisés',
+    stats_satisfaction_label: 'Satisfaction client',
+    stats_support_label: 'Support technique',
+
+    // Team (Home)
+    team_home_badge: 'Notre équipe',
+    team_home_title: "Les personnes derrière Codex",
+    team_home_desc: "Une équipe jeune et passionnée du Maroc, composée de développeurs, designers et chefs de projets.",
 
     // Pricing
     pricing_badge: 'Tarifs',
@@ -455,7 +504,6 @@ export const translations = {
     contact_location: 'Notre emplacement',
     contact_open: 'Ouvert maintenant',
 
-    // Footer
     // Portfolio
     portfolio_badge: 'Nos Réalisations',
     portfolio_title: 'Des projets',
@@ -509,6 +557,8 @@ export const translations = {
     footer_services: 'Nos Services',
     footer_contact: 'Contactez-nous',
     footer_copyright: 'Tous droits réservés.',
+    footer_wa: 'WhatsApp',
+    footer_phone: '+212 600 000 000',
   },
 } as const;
 

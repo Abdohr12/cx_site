@@ -34,6 +34,10 @@ export const metadata: Metadata = {
   // ===== Canonical URL =====
   alternates: {
     canonical: SITE_URL,
+    languages: {
+      'ar-MA': `${SITE_URL}?lang=ar`,
+      'fr-MA': `${SITE_URL}?lang=fr`,
+    },
   },
 
   // ===== Robots =====

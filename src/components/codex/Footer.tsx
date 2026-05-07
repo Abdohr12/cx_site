@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Instagram, Linkedin, Twitter, ArrowUp } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Linkedin, ArrowUp, MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useLang } from '@/lib/LanguageContext';
 import type { TranslationKey } from '@/lib/i18n';
@@ -50,8 +50,8 @@ export default function Footer({ onNavigate }: FooterProps) {
               <div className="flex items-center gap-2.5">
                 {[
                   { icon: <Instagram size={16} />, href: 'https://instagram.com/codex_ma', label: 'Instagram' },
-                  { icon: <Linkedin size={16} />, href: '#', label: 'LinkedIn' },
-                  { icon: <Twitter size={16} />, href: '#', label: 'Twitter' },
+                  { icon: <Linkedin size={16} />, href: 'https://linkedin.com/company/codex-ma', label: 'LinkedIn' },
+                  { icon: <MessageCircle size={16} />, href: 'https://wa.me/212600000000', label: 'WhatsApp' },
                 ].map((social, i) => (
                   <motion.a
                     key={i}
@@ -98,7 +98,7 @@ export default function Footer({ onNavigate }: FooterProps) {
                   <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center shrink-0">
                     <Phone size={14} className="text-[#00B0F0]" />
                   </div>
-                  <span dir="ltr">+212 600 000 000</span>
+                  <span dir="ltr">{t('footer_phone' as TranslationKey)}</span>
                 </li>
                 <li className="flex items-center gap-3 text-white/50 text-[14px]">
                   <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center shrink-0">
