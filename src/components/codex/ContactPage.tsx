@@ -641,12 +641,20 @@ export default function ContactPage() {
                           <textarea
                             id="message"
                             required
+                            minLength={10}
                             rows={5}
                             value={form.message}
                             onChange={(e) => setForm({ ...form, message: e.target.value })}
                             className="w-full rounded-xl bg-white/[0.06] border border-white/[0.1] px-4 py-3 text-white text-[14px] outline-none resize-none placeholder:text-white/30 leading-relaxed backdrop-blur-sm"
-                            placeholder={t('form_message').replace(' *', '')}
+                            placeholder={t('form_message_ph')}
                           />
+                          {form.message.length > 0 && (
+                            <p className={`text-[12px] mt-1.5 text-right ${
+                              form.message.length >= 10 ? 'text-emerald-400/70' : 'text-amber-400/80'
+                            }`}>
+                              {t('form_char_count').replace('{count}', String(form.message.length))}
+                            </p>
+                          )}
                         </div>
 
                       {/* Submit buttons */}
