@@ -126,6 +126,14 @@ interface PortfolioPageProps {
   onNavigate: (page: string) => void;
 }
 
+const projectScreenshots: Record<number, string[]> = {
+  1: ['/portfolio/partier-portfolio/pp_1.png', '/portfolio/partier-portfolio/pp_2.png', '/portfolio/partier-portfolio/pp_3.png'],
+  2: ['/portfolio/partier-portfolio/pp_4.png', '/portfolio/partier-portfolio/pp_5.png', '/portfolio/partier-portfolio/pp_6.png'],
+  3: ['/portfolio/saas-factures/image1.png', '/portfolio/saas-factures/image2.png', '/portfolio/saas-factures/image3.png'],
+  4: ['/portfolio/saas-factures/image4.png', '/portfolio/saas-factures/image5.png'],
+  5: ['/portfolio/partier-portfolio/pp_7.png', '/portfolio/partier-portfolio/pp_8.png'],
+  6: ['/portfolio/partier-portfolio/pp_3.png'],
+};
 const projectIcons = ['/icons/3d/users.png', '/icons/3d/ecommerce.png', '/icons/3d/mobile.png', '/icons/3d/web-dev.png', '/icons/3d/dashboard.png', '/icons/3d/design.png'];
 const projectGradients = [
   'from-[#002A5C] via-[#004d8a] to-[#00B0F0]',
@@ -152,6 +160,8 @@ export default function PortfolioPage({ onNavigate }: PortfolioPageProps) {
   const { t, isRTL } = useLang();
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
   const [activeFilter, setActiveFilter] = useState('all');
+
+  const [activeScreenshot, setActiveScreenshot] = useState<Record<number, number>>({});
 
   const projects = [1, 2, 3, 4, 5, 6].map((i) => ({
     num: i,
@@ -375,23 +385,64 @@ export default function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                         {/* Grid pattern overlay */}
                         <div className="absolute inset-0 grid-pattern opacity-[0.15]" />
 
-                        {/* Glassmorphism overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/[0.06]" />
-
-                        {/* Decorative circles */}
-                        <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-white/[0.04]" />
-                        <div className="absolute -top-4 -right-4 w-16 h-16 rounded-full bg-white/[0.04]" />
-
-                        {/* Floating icon with glass container */}
-                        <motion.div
-                          animate={{ y: [-6, 6, -6], rotate: [-2, 2, -2] }}
-                          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                          className="absolute inset-0 flex items-center justify-center z-10"
-                        >
-                          <div className="w-24 h-24 rounded-3xl glass flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-700">
-                            <Image src={projectIcons[p.num - 1]} alt="" width={52} height={52} className="drop-shadow-2xl" />
+                        {/* Actual screenshots with fade animation */}
+                        {projectScreenshots[p.num] && projectScreenshots[p.num].length > 0 && (
+                          <div className="absolute inset-0 z-10">
+                            <AnimatePresence mode="wait">
+                              <motion.div
+                                key={activeScreenshot[p.num] || 0}
+                                initial={{ opacity: 0, scale: 1.05 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.6, ease: 'easeInOut' }}
+                                className="absolute inset-0"
+                              >
+                                <Image
+                                  src={projectScreenshots[p.num][activeScreenshot[p.num] || 0]}
+                                  alt={t(p.titleKey)}
+                                  fill
+                                  className="object-cover object-top"
+                                  sizes="(max-width: 768px) 100vw, 33vw"
+                                />
+                              </motion.div>
+                            </AnimatePresence>
+                            {/* Bottom gradient for readability */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-20" />
+                            {/* Screenshot dots indicator */}
+                            {projectScreenshots[p.num].length > 1 && (
+                              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5">
+                                {projectScreenshots[p.num].map((_, si) => (
+                                  <button
+                                    key={si}
+                                    onClick={(e) => { e.stopPropagation(); setActiveScreenshot(prev => ({ ...prev, [p.num]: si })); }}
+                                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                      (activeScreenshot[p.num] || 0) === si
+                                        ? 'bg-white w-5'
+                                        : 'bg-white/50 hover:bg-white/70'
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        </motion.div>
+                        )}
+
+                        {/* Fallback: Floating icon if no screenshots */}
+                        {!projectScreenshots[p.num] && (
+                          <>
+                            {/* Glassmorphism overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/[0.06]" />
+                            <motion.div
+                              animate={{ y: [-6, 6, -6], rotate: [-2, 2, -2] }}
+                              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                              className="absolute inset-0 flex items-center justify-center z-10"
+                            >
+                              <div className="w-24 h-24 rounded-3xl glass flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-700">
+                                <Image src={projectIcons[p.num - 1]} alt="" width={52} height={52} className="drop-shadow-2xl" />
+                              </div>
+                            </motion.div>
+                          </>
+                        )}
 
                         {/* Category badge — glass-strong */}
                         <div className="absolute top-4 right-4 z-20">
