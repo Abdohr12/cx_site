@@ -38,8 +38,6 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
 
   return (
     <nav
-      role="navigation"
-      aria-label="التنقل الرئيسي"
       className={`fixed top-0 right-0 left-0 z-50 transition-all duration-500 ${
         scrolled
           ? 'bg-white/90 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,42,92,0.08)] border-b border-white/20'
@@ -54,12 +52,11 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             className="flex items-center gap-3 cursor-pointer shrink-0"
-            aria-label="العودة إلى الصفحة الرئيسية"
           >
             <div className={`relative w-10 h-10 rounded-xl flex items-center justify-center ${
               scrolled ? 'bg-gradient-to-br from-[#002A5C] to-[#004d8a]' : 'glass'
             }`}>
-              <Image src="/logo.png" alt="شعار Codex" width={28} height={28} className="rounded-md" />
+              <Image src="/logo.png" alt="Codex" width={28} height={28} className="rounded-md" />
             </div>
             <span
               className={`text-[22px] font-extrabold tracking-tight transition-colors duration-300 ${
@@ -76,8 +73,6 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
               <button
                 key={link.id}
                 onClick={() => handleNav(link.id)}
-                aria-label={`الانتقال إلى ${t(link.key)}`}
-                aria-current={currentPage === link.id ? 'page' : undefined}
                 className={`relative px-5 py-2.5 rounded-xl text-[15px] font-semibold transition-all duration-300 cursor-pointer ${
                   currentPage === link.id
                     ? scrolled
@@ -115,7 +110,6 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleLang}
-              aria-label="تغيير اللغة"
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 cursor-pointer ${
                 scrolled
                   ? 'text-[#002A5C] hover:bg-[#002A5C]/5 border border-[#002A5C]/10'
@@ -128,7 +122,6 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Button
                 onClick={() => handleNav('contact')}
-                aria-label="تواصل معنا"
                 className="bg-gradient-to-l from-[#00B0F0] to-[#0098d4] hover:from-[#00c4ff] hover:to-[#00B0F0] text-white font-bold rounded-xl px-6 py-2.5 text-[15px] shadow-lg shadow-[#00B0F0]/25 hover:shadow-xl hover:shadow-[#00B0F0]/35 transition-all duration-300 cursor-pointer"
               >
                 {t('nav_cta')}
@@ -151,8 +144,6 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
                 scrolled ? 'bg-[#f0f4f8] text-[#002A5C]' : 'glass text-white'
               }`}
               onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label={mobileOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
-              aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -169,7 +160,6 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
             className="md:hidden bg-white/95 backdrop-blur-xl border-t border-[#e0e7ef]/50 overflow-hidden"
-            role="menu"
           >
             <div className="px-6 py-4 space-y-1">
               {navLinkKeys.map((link, i) => (

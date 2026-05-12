@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Instagram, Linkedin, ArrowUp, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Linkedin, Twitter, ArrowUp } from 'lucide-react';
 import Image from 'next/image';
 import { useLang } from '@/lib/LanguageContext';
 import type { TranslationKey } from '@/lib/i18n';
@@ -29,7 +29,7 @@ export default function Footer({ onNavigate }: FooterProps) {
   const nav = (page: string) => { onNavigate(page); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
   return (
-    <footer className="relative overflow-hidden" role="contentinfo">
+    <footer className="relative overflow-hidden">
       {/* Top gradient divider */}
       <div className="h-1 bg-gradient-to-l from-[#00B0F0] via-[#004d8a] to-[#002A5C]" />
 
@@ -40,7 +40,7 @@ export default function Footer({ onNavigate }: FooterProps) {
             <div>
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00B0F0] to-[#0098d4] flex items-center justify-center shadow-lg shadow-[#00B0F0]/20">
-                  <Image src="/logo.png" alt="شعار Codex" width={26} height={26} className="rounded-md" />
+                  <Image src="/logo.png" alt="Codex" width={26} height={26} className="rounded-md" />
                 </div>
                 <span className="text-[22px] font-extrabold">Codex</span>
               </div>
@@ -49,16 +49,15 @@ export default function Footer({ onNavigate }: FooterProps) {
               </p>
               <div className="flex items-center gap-2.5">
                 {[
-                  { icon: <Instagram size={16} />, href: 'https://instagram.com/codex_ma', label: 'Instagram' },
-                  { icon: <Linkedin size={16} />, href: 'https://linkedin.com/company/codex-ma', label: 'LinkedIn' },
-                  { icon: <MessageCircle size={16} />, href: 'https://wa.me/212600000000', label: 'WhatsApp' },
+                  { icon: <Instagram size={16} />, href: 'https://instagram.com/codex_ma' },
+                  { icon: <Linkedin size={16} />, href: '#' },
+                  { icon: <Twitter size={16} />, href: '#' },
                 ].map((social, i) => (
                   <motion.a
                     key={i}
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`تابعنا على ${social.label}`}
                     whileHover={{ scale: 1.1, y: -2 }}
                     className="w-10 h-10 rounded-xl bg-white/[0.06] hover:bg-[#00B0F0] flex items-center justify-center transition-all duration-300 border border-white/[0.06] hover:border-[#00B0F0]"
                   >
@@ -74,7 +73,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               <ul className="space-y-3">
                 {linkKeys.map((l) => (
                   <li key={l.page}>
-                    <button onClick={() => nav(l.page)} aria-label={`${t(l.key)}`} className="text-white/50 hover:text-[#00B0F0] transition-colors text-[14px] font-medium cursor-pointer hover:translate-x-1 transform inline-block">{t(l.key)}</button>
+                    <button onClick={() => nav(l.page)} className="text-white/50 hover:text-[#00B0F0] transition-colors text-[14px] font-medium cursor-pointer hover:translate-x-1 transform inline-block">{t(l.key)}</button>
                   </li>
                 ))}
               </ul>
@@ -98,7 +97,7 @@ export default function Footer({ onNavigate }: FooterProps) {
                   <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center shrink-0">
                     <Phone size={14} className="text-[#00B0F0]" />
                   </div>
-                  <span dir="ltr">{t('footer_phone' as TranslationKey)}</span>
+                  <span dir="ltr">+212 600 000 000</span>
                 </li>
                 <li className="flex items-center gap-3 text-white/50 text-[14px]">
                   <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center shrink-0">
@@ -125,7 +124,6 @@ export default function Footer({ onNavigate }: FooterProps) {
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.9 }}
               onClick={goUp}
-              aria-label="العودة إلى الأعلى"
               className="w-10 h-10 rounded-xl bg-white/[0.06] hover:bg-[#00B0F0] flex items-center justify-center transition-all duration-300 cursor-pointer border border-white/[0.06] hover:border-[#00B0F0]"
             >
               <ArrowUp size={16} />

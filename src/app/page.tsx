@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from '@/components/codex/Navbar';
 import Footer from '@/components/codex/Footer';
 import HomePage from '@/components/codex/HomePage';
@@ -38,7 +39,17 @@ export default function CodexWebsite() {
     <div className="min-h-screen flex flex-col">
       <Navbar currentPage={currentPage} onNavigate={handleNavigate} />
       <main className="flex-1">
-        {renderPage()}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPage}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+          >
+            {renderPage()}
+          </motion.div>
+        </AnimatePresence>
       </main>
       <Footer onNavigate={handleNavigate} />
     </div>
