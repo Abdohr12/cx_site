@@ -8,12 +8,17 @@ import ServicesPage from '@/components/codex/ServicesPage';
 import AboutPage from '@/components/codex/AboutPage';
 import PortfolioPage from '@/components/codex/PortfolioPage';
 import ContactPage from '@/components/codex/ContactPage';
+import ProjectDetailPage from '@/components/codex/ProjectDetailPage';
 
 export default function CodexWebsite() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [projectId, setProjectId] = useState<number | null>(null);
 
-  const handleNavigate = (page: string) => {
+  const handleNavigate = (page: string, data?: number) => {
     setCurrentPage(page);
+    if (data !== undefined) {
+      setProjectId(data);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -27,6 +32,8 @@ export default function CodexWebsite() {
         return <AboutPage />;
       case 'portfolio':
         return <PortfolioPage onNavigate={handleNavigate} />;
+      case 'project-detail':
+        return projectId ? <ProjectDetailPage projectId={projectId} onNavigate={handleNavigate} /> : <PortfolioPage onNavigate={handleNavigate} />;
       case 'contact':
         return <ContactPage />;
       default:
