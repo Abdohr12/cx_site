@@ -5,7 +5,7 @@ import { motion, useInView, useMotionValue, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import {
   ArrowLeft, ArrowRight, Sparkles, ExternalLink,
-  GraduationCap, Receipt, Check, Star, Shield,
+  GraduationCap, Receipt, Check, Star, Shield, Award,
   Zap, Users, BarChart3, FileText, Layers, Globe,
 } from 'lucide-react';
 import Image from 'next/image';
