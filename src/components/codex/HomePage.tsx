@@ -1,26 +1,14 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useInView, useMotionValue, useTransform } from 'framer-motion';
+import { useRef, useState, useEffect, MouseEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
-  Star,
-  ArrowLeft,
-  ArrowRight,
-  Building2,
-  GraduationCap,
-  Store,
-  Laptop,
-  Sparkles,
-  Shield,
-  Zap,
-  ArrowUpRight,
-  Code,
-  Smartphone,
-  Palette,
-  HeadphonesIcon,
-  ShoppingCart,
+  Star, ArrowLeft, ArrowRight, Building2, GraduationCap, Store, Laptop,
+  Sparkles, Shield, Zap, ArrowUpRight, Code, Smartphone, Palette,
+  HeadphonesIcon, ShoppingCart, Quote,
+  Search, Layout, Rocket, Award, TrendingUp, Heart, Users, MessageCircle,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useLang } from '@/lib/LanguageContext';
@@ -62,6 +50,194 @@ function FadeInScale({ children, className = '', delay = 0 }: { children: React.
   );
 }
 
+/* ===== 3D Tilt Card ===== */
+function TiltCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-0.5, 0.5], [10, -10]);
+  const rotateY = useTransform(x, [-0.5, 0.5], [-10, 10]);
+
+  const handleMouse = (e: MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const handleLeave = () => { x.set(0); y.set(0); };
+
+  return (
+    <motion.div ref={ref} style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+      onMouseMove={handleMouse} onMouseLeave={handleLeave}
+      className={className}>
+      {children}
+    </motion.div>
+  );
+}
+
+/* ===== 3D Floating Cube ===== */
+function FloatingCube({ size = 50, color = '#00B0F0', className = '' }: { size?: number; color?: string; className?: string }) {
+  const half = size / 2;
+  const faceStyle = (transform: string) => ({
+    position: 'absolute' as const, width: size, height: size,
+    transform, borderRadius: size * 0.15,
+    background: `linear-gradient(135deg, ${color}40, ${color}20)`,
+    border: `1px solid ${color}30`,
+    backdropFilter: 'blur(4px)',
+  });
+  return (
+    <div className={className} style={{ width: size, height: size, transformStyle: 'preserve-3d' }}>
+      <div style={faceStyle(`translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateY(180deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateY(-90deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateY(90deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateX(90deg) translateZ(${half}px)`)} />
+      <div style={faceStyle(`rotateX(-90deg) translateZ(${half}px)`)} />
+    </div>
+  );
+}
+
+/* ===== 3D Particle Field ===== */
+function ParticleField({ count = 15 }: { count?: number }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  if (!mounted) {
+    return <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ perspective: 800 }} />;
+  }
+
+  const particles = Array.from({ length: count }, (_, i) => ({
+    id: i, x: Math.random() * 100, y: Math.random() * 100,
+    size: Math.random() * 4 + 2, duration: Math.random() * 6 + 4,
+    delay: Math.random() * 5, px: (Math.random() - 0.5) * 60,
+    py: -(Math.random() * 150 + 50), pz: (Math.random() - 0.5) * 80,
+    opacity: Math.random() * 0.4 + 0.1,
+  }));
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ perspective: 800 }}>
+      {particles.map(p => (
+        <div key={p.id} className="absolute rounded-full particle-3d"
+          style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size,
+            background: `radial-gradient(circle, ${p.size > 4 ? '#00D4FF' : '#00B0F0'} 0%, transparent 70%)`,
+            opacity: p.opacity, '--px': `${p.px}px`, '--py': `${p.py}px`, '--pz': `${p.pz}px`,
+            '--duration': `${p.duration}s`, '--delay': `${p.delay}s`,
+          } as React.CSSProperties} />
+      ))}
+    </div>
+  );
+}
+
+/* ===== Stat Counter with IntersectionObserver ===== */
+function StatCounter({ target, suffix = '', label, icon, delay = 0 }: { target: number; suffix?: string; label: string; icon: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-50px' });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    const duration = 2000;
+    const stepTime = 25;
+    const steps = duration / stepTime;
+    const increment = target / steps;
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= target) { setCount(target); clearInterval(timer); }
+      else setCount(Math.floor(start));
+    }, stepTime);
+    return () => clearInterval(timer);
+  }, [inView, target]);
+
+  return (
+    <FadeIn delay={delay} className="text-center">
+      <div ref={ref} className="flex flex-col items-center">
+        <div className="w-14 h-14 rounded-2xl bg-[#00B0F0]/15 flex items-center justify-center text-[#00D4FF] mx-auto mb-4 backdrop-blur-sm border border-[#00B0F0]/20">
+          {icon}
+        </div>
+        <span className="text-4xl lg:text-5xl font-extrabold text-white mb-2">
+          {count}{suffix}
+        </span>
+        <span className="text-white/60 text-[14px] font-semibold">{label}</span>
+      </div>
+    </FadeIn>
+  );
+}
+
+/* ===== Testimonial Infinite Scroll Ticker (Pure CSS, RTL/LTR) ===== */
+function TestimonialTicker() {
+  const { t, isRTL } = useLang();
+  const total = 8;
+
+  const testimonialColors = [
+    'from-[#00B0F0] to-[#0098d4]', 'from-[#002A5C] to-[#004d8a]', 'from-[#00B0F0] to-[#0088cc]',
+    'from-[#004d8a] to-[#002A5C]', 'from-[#0098d4] to-[#00B0F0]', 'from-[#002A5C] to-[#003d7a]',
+    'from-[#00B0F0] to-[#0098d4]', 'from-[#004d8a] to-[#002A5C]',
+  ];
+
+  const Card = ({ idx }: { idx: number }) => (
+    <div className="flex-shrink-0 w-[280px] sm:w-[340px] lg:w-[400px] px-2.5" data-card>
+      <div className="glass-strong rounded-2xl p-5 sm:p-6 relative overflow-hidden h-full group/card hover:bg-white/[0.14] transition-all duration-500">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00B0F0]/25 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/15 to-transparent" />
+        <div className="absolute inset-0 grid-pattern opacity-[0.04]" />
+
+        <div className="mb-3.5">
+          <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${testimonialColors[idx]} flex items-center justify-center shadow-lg`}
+            style={{ boxShadow: `0 4px 20px ${idx % 2 === 0 ? 'rgba(0,176,240,0.25)' : 'rgba(0,42,92,0.25)'}` }}>
+            <Quote className="w-4 h-4 text-white" />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-0.5 mb-3">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400 drop-shadow-[0_0_4px_rgba(251,191,36,0.3)]" />
+          ))}
+        </div>
+
+        <p className="text-[13px] sm:text-[14px] leading-[1.8] text-white/90 mb-4 min-h-[80px]">
+          &ldquo;{t(`testimonial_${idx + 1}_text` as TranslationKey)}&rdquo;
+        </p>
+
+        <div className="flex items-center gap-3 mt-auto pt-3 border-t border-white/[0.08]">
+          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${testimonialColors[idx]} flex items-center justify-center text-white font-bold text-sm shadow-md`}>
+            {t(`testimonial_${idx + 1}_name` as TranslationKey).charAt(0)}
+          </div>
+          <div className="min-w-0">
+            <div className="font-bold text-white text-[12.5px] truncate">{t(`testimonial_${idx + 1}_name` as TranslationKey)}</div>
+            <div className="text-white/45 text-[11px] truncate">{t(`testimonial_${idx + 1}_role` as TranslationKey)}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Exactly 2 copies: original (8) + clone (8) = 16 cards total
+  // The CSS animation scrolls by -50% (LTR) or +50% (RTL), which = exactly one full set
+  const items = Array.from({ length: total * 2 }, (_, i) => ({ index: i % total, key: i }));
+
+  return (
+    <div className="relative w-full">
+      {/* Fade edges */}
+      <div className="absolute left-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-r from-[#001529] to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-10 sm:w-16 md:w-24 bg-gradient-to-l from-[#001529] to-transparent z-10 pointer-events-none" />
+
+      {/* Marquee container */}
+      <div className="overflow-hidden w-full">
+        {/* Track: direction:ltr prevents RTL from reversing flex order.
+            CSS animation class handles LTR vs RTL scrolling direction. */}
+        <div
+          className={`flex ${isRTL ? 'marquee-track-rtl' : 'marquee-track-ltr'}`}
+          style={{ width: 'max-content', direction: 'ltr' }}
+        >
+          {items.map((item) => (
+            <Card key={item.key} idx={item.index} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage({ onNavigate }: HomePageProps) {
   const { t, isRTL } = useLang();
   const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
@@ -86,6 +262,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
     <div className="pt-[72px]">
       {/* ===== HERO ===== */}
       <section className="hero-gradient relative min-h-[88vh] flex items-center overflow-hidden">
+        {/* Dark overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/30 pointer-events-none" />
         {/* Animated mesh orbs */}
         <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-[#00B0F0]/20 rounded-full blur-[150px] orb" />
         <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-[#00B0F0]/10 rounded-full blur-[130px] orb-delay" />
@@ -161,13 +339,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
         <div className="relative max-w-4xl mx-auto px-6 lg:px-8 py-20 text-center">
           {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          <div
             className="mb-7"
           >
-            <span className="inline-flex items-center gap-2.5 glass text-white/90 px-5 py-2.5 rounded-full text-sm font-semibold">
+            <span className="inline-flex items-center gap-2.5 bg-white/[0.12] backdrop-blur-xl border border-white/[0.2] text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg">
               <motion.span
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
@@ -176,45 +351,33 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </motion.span>
               {t('hero_badge')}
             </span>
-          </motion.div>
+          </div>
 
           {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
-            className="text-[2.8rem] sm:text-[3.5rem] lg:text-[4.2rem] font-extrabold text-white leading-[1.15] mb-7"
+          <h1
+            className="text-[2.8rem] sm:text-[3.5rem] lg:text-[4.2rem] font-extrabold text-white leading-[1.15] mb-7 drop-shadow-[0_2px_8px_rgba(0,0,0,0.35)]"
           >
             {t('hero_title_1')}{' '}
-            <span className="gradient-text">{t('hero_title_highlight')}</span>
+            <span className="text-[#00D4FF] drop-shadow-[0_2px_12px_rgba(0,176,240,0.5)]">{t('hero_title_highlight')}</span>
             <br />
             {t('hero_title_2')}{' '}
             <span className="relative inline-block">
               <span className="text-white">Codex</span>
-              <motion.span
-                initial={{ width: 0 }}
-                animate={{ width: '100%' }}
-                transition={{ duration: 0.8, delay: 0.8, ease: [0.23, 1, 0.32, 1] }}
-                className="absolute -bottom-1.5 right-0 h-[4px] bg-gradient-to-l from-[#00B0F0] to-[#00D4FF] rounded-full"
+              <span
+                className="absolute -bottom-1.5 right-0 h-[4px] bg-gradient-to-l from-[#00B0F0] to-[#00D4FF] rounded-full w-full"
               />
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            className="text-lg sm:text-xl text-white/70 leading-[1.85] mb-10 max-w-2xl mx-auto"
+          <p
+            className="text-lg sm:text-xl text-white/90 leading-[1.85] mb-10 max-w-2xl mx-auto drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]"
           >
             {t('hero_desc')}
-          </motion.p>
+          </p>
 
           {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35, ease: [0.23, 1, 0.32, 1] }}
+          <div
             className="flex flex-wrap items-center justify-center gap-4 mb-10"
           >
             <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
@@ -237,27 +400,21 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 {t('hero_cta2')}
               </Button>
             </motion.div>
-          </motion.div>
+          </div>
 
-          {/* Trust indicators */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex items-center justify-center gap-8 text-white/60 text-sm"
-          >
-            <span className="flex items-center gap-2.5">
-              <span className="relative flex items-center justify-center">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="absolute w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping opacity-30" />
-              </span>
-              {t('hero_support')}
-            </span>
-            <span className="flex items-center gap-2.5">
-              <Shield className="w-4 h-4 text-[#00B0F0]/70" />
-              {t('hero_no_commit')}
-            </span>
-          </motion.div>
+          {/* Social proof badges */}
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            {[
+              { num: t('hero_sp1' as TranslationKey), label: t('hero_sp1_label' as TranslationKey) },
+              { num: t('hero_sp2' as TranslationKey), label: t('hero_sp2_label' as TranslationKey) },
+              { num: t('hero_sp3' as TranslationKey), label: t('hero_sp3_label' as TranslationKey) },
+            ].map((stat, i) => (
+              <div key={i} className="flex items-center gap-2 bg-white/[0.08] backdrop-blur-sm border border-white/[0.12] rounded-2xl px-5 py-2.5">
+                <span className="text-[#00D4FF] font-extrabold text-lg">{stat.num}</span>
+                <span className="text-white/70 text-[13px] font-medium">{stat.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Bottom wave */}
@@ -386,52 +543,142 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* ===== TESTIMONIAL ===== */}
+      {/* ===== PROCESS — Comment nous travaillons ===== */}
       <section className="py-24 lg:py-32 bg-white relative overflow-hidden">
-        {/* Decorative bg elements */}
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#00B0F0]/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#002A5C]/5 rounded-full blur-[100px]" />
-
+        <div className="absolute inset-0 holographic" />
         <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+          <FadeIn className="text-center mb-16">
+            <span className="inline-flex items-center gap-2 text-[#00B0F0] text-sm font-bold mb-3 uppercase tracking-wider">
+              <Zap className="w-4 h-4" />
+              {t('process_badge' as TranslationKey)}
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-extrabold text-[#002A5C] mb-5 leading-tight">
+              {t('process_title' as TranslationKey)}
+            </h2>
+            <p className="text-[#5a6a7e] max-w-2xl mx-auto text-[18px] leading-relaxed">
+              {t('process_desc' as TranslationKey)}
+            </p>
+          </FadeIn>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { icon: <Search className="w-7 h-7" />, title: 'process_step_1_title' as TranslationKey, desc: 'process_step_1_desc' as TranslationKey, num: '01', gradient: 'from-[#00B0F0] to-[#0098d4]' },
+              { icon: <Layout className="w-7 h-7" />, title: 'process_step_2_title' as TranslationKey, desc: 'process_step_2_desc' as TranslationKey, num: '02', gradient: 'from-[#002A5C] to-[#004d8a]' },
+              { icon: <Code className="w-7 h-7" />, title: 'process_step_3_title' as TranslationKey, desc: 'process_step_3_desc' as TranslationKey, num: '03', gradient: 'from-[#00B0F0] to-[#0088cc]' },
+              { icon: <Rocket className="w-7 h-7" />, title: 'process_step_4_title' as TranslationKey, desc: 'process_step_4_desc' as TranslationKey, num: '04', gradient: 'from-[#002A5C] to-[#003d7a]' },
+            ].map((step, i) => (
+              <FadeInScale key={i} delay={i * 0.12}>
+                <div className="relative bg-white rounded-3xl p-7 border border-[#e0e7ef]/80 h-full group hover:shadow-xl hover:shadow-[#00B0F0]/[0.08] hover:border-[#00B0F0]/20 transition-all duration-500">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[#00B0F0]/[0.04] to-transparent rounded-bl-[50px]" />
+                  <div className="text-[#e0e7ef] font-extrabold text-[42px] leading-none mb-4">{step.num}</div>
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${step.gradient} flex items-center justify-center text-white mb-5 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                    {step.icon}
+                  </div>
+                  <h3 className="text-lg font-extrabold text-[#002A5C] mb-3">{t(step.title)}</h3>
+                  <p className="text-[#5a6a7e] leading-relaxed text-[14px]">{t(step.desc)}</p>
+                </div>
+              </FadeInScale>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== STATS — Counter Animation ===== */}
+      <section className="py-20 bg-slate-950 relative overflow-hidden">
+        <div className="absolute inset-0 grid-pattern opacity-[0.08]" />
+        <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-[#00B0F0]/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#00B0F0]/5 rounded-full blur-[120px]" />
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { num: 3, suffix: '+', label: 'stats_years_label' as TranslationKey, icon: <Award className="w-6 h-6" /> },
+              { num: 50, suffix: '+', label: 'stats_projects_label' as TranslationKey, icon: <Rocket className="w-6 h-6" /> },
+              { num: 98, suffix: '%', label: 'stats_satisfaction_label' as TranslationKey, icon: <TrendingUp className="w-6 h-6" /> },
+              { num: 24, suffix: '/7', label: 'stats_support_label' as TranslationKey, icon: <HeadphonesIcon className="w-6 h-6" /> },
+            ].map((stat, i) => (
+              <StatCounter key={i} target={stat.num} suffix={stat.suffix} label={t(stat.label)} icon={stat.icon} delay={i * 0.1} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== TESTIMONIALS — Full-Width Infinite Scroll Ticker ===== */}
+      <section className="py-20 lg:py-28 relative overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #001529 0%, #002A5C 30%, #003d7a 60%, #002A5C 100%)' }}>
+        {/* 3D Background Scene */}
+        <div className="absolute inset-0 scene-3d pointer-events-none">
+          <div className="absolute top-[10%] right-[8%] float-3d-1 hidden lg:block"><FloatingCube size={55} color="#00B0F0" /></div>
+          <div className="absolute top-[55%] right-[5%] float-3d-2 hidden lg:block"><FloatingCube size={40} color="#002A5C" /></div>
+          <div className="absolute top-[25%] left-[6%] float-3d-3 hidden lg:block"><FloatingCube size={50} color="#00D4FF" /></div>
+          <div className="absolute bottom-[20%] left-[10%] float-3d-4 hidden lg:block"><FloatingCube size={35} color="#00B0F0" /></div>
+          <div className="absolute top-[20%] right-[20%] w-24 h-24 ring-3d hidden lg:block" />
+          <div className="absolute bottom-[25%] right-[15%] w-20 h-20 ring-3d hidden lg:block" style={{ animationDelay: '-5s', borderColor: 'rgba(0,42,92,0.25)' }} />
+          <div className="absolute top-[40%] left-[15%] w-28 h-28 morph-sphere bg-[#00B0F0]/5 hidden lg:block" />
+        </div>
+        <ParticleField count={20} />
+        <div className="absolute inset-0 grid-pattern opacity-[0.25]" />
+
+        {/* Heading — centered */}
+        <div className="relative max-w-5xl mx-auto px-6 lg:px-8 mb-12">
           <FadeIn>
-            <div className="max-w-3xl mx-auto text-center">
-              <div className="relative bg-gradient-to-br from-[#f8fafc] to-white rounded-[2rem] p-10 lg:p-14 border border-[#e0e7ef]/60 shadow-lg shadow-[#002A5C]/[0.04]">
-                {/* Quote decoration */}
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#002A5C] to-[#004d8a] flex items-center justify-center shadow-lg shadow-[#002A5C]/20">
-                    <span className="text-white text-lg font-bold">&ldquo;</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-center gap-1.5 mb-7">
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.3 + i * 0.1 }}
-                    >
-                      <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
-                    </motion.div>
-                  ))}
-                </div>
-
-                <p className="text-xl lg:text-[22px] font-medium text-[#002A5C] leading-[2] mb-8">
-                  {t('testimonial_text')}
-                </p>
-
-                <div className="flex items-center justify-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#002A5C] to-[#004d8a] flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-[#002A5C]/20">
-                    {t('testimonial_name').charAt(0)}
-                  </div>
-                  <div className="text-right">
-                    <div className="font-bold text-[#002A5C] text-[15px]">{t('testimonial_name')}</div>
-                    <div className="text-[#8a96a8] text-[13px]">{t('testimonial_role')}</div>
-                  </div>
-                </div>
-              </div>
+            <div className="text-center">
+              <span className="inline-flex items-center gap-2 text-[#00D4FF] text-sm font-bold uppercase tracking-wider mb-3">
+                <Star className="w-4 h-4 fill-[#00D4FF] text-[#00D4FF]" />
+                {isRTL ? 'آراء عملائنا' : 'Témoignages'}
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight">
+                {isRTL ? 'ماذا يقول عملاؤنا عنا' : 'Ce que disent nos clients'}
+              </h2>
             </div>
           </FadeIn>
+        </div>
+
+        {/* Full-width ticker — no container constraint */}
+        <div className="relative">
+          <TestimonialTicker />
+        </div>
+      </section>
+
+      {/* ===== TEAM — Home ===== */}
+      <section className="py-24 lg:py-32 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 holographic" />
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+          <FadeIn className="text-center mb-16">
+            <span className="inline-flex items-center gap-2 text-[#00B0F0] text-sm font-bold mb-3 uppercase tracking-wider">
+              <Users className="w-4 h-4" />
+              {t('team_home_badge' as TranslationKey)}
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-extrabold text-[#002A5C] mb-5 leading-tight">{t('team_home_title' as TranslationKey)}</h2>
+            <p className="text-[#5a6a7e] max-w-2xl mx-auto text-[18px] leading-relaxed">{t('team_home_desc' as TranslationKey)}</p>
+          </FadeIn>
+          {(() => {
+            const teamBgs = ['from-[#002A5C] to-[#004d8a]', 'from-[#00B0F0] to-[#0098d4]', 'from-[#002A5C] to-[#004d8a]', 'from-[#00B0F0] to-[#0098d4]'];
+            const teamIcons = [<Zap key="zap" className="w-6 h-6" />, <Heart key="heart" className="w-6 h-6" />, <Shield key="shield" className="w-6 h-6" />, <TrendingUp key="trending" className="w-6 h-6" />];
+            return (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {(['team_1_name', 'team_2_name', 'team_3_name', 'team_4_name'] as TranslationKey[]).map((nameKey, i) => {
+              const roleKey = `team_${i + 1}_role` as TranslationKey;
+              return (
+                <FadeIn key={i} delay={i * 0.12}>
+                  <TiltCard>
+                    <div className="bg-white rounded-3xl p-7 text-center group cursor-default h-full relative overflow-hidden border border-[#e0e7ef]/60 hover:shadow-xl hover:shadow-[#00B0F0]/[0.08] hover:border-[#00B0F0]/20 transition-all duration-500"
+                      style={{ transformStyle: 'preserve-3d' }}>
+                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00B0F0]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div style={{ transform: 'translateZ(30px)' }}>
+                        <div className={`w-20 h-20 bg-gradient-to-br ${teamBgs[i]} rounded-3xl flex items-center justify-center text-white text-2xl font-bold mx-auto mb-5 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 relative`}>
+                          <div className="absolute inset-0 rounded-3xl bg-white/0 group-hover:bg-white/10 transition-colors duration-500" />
+                          <div className="relative">{teamIcons[i]}</div>
+                        </div>
+                        <h3 className="font-extrabold text-[#002A5C] text-[16px] mb-1">{t(nameKey)}</h3>
+                        <p className="text-[#8a96a8] text-[13px] font-medium">{t(roleKey)}</p>
+                      </div>
+                    </div>
+                  </TiltCard>
+                </FadeIn>
+              );
+            })}
+          </div>
+            );
+          })()}
         </div>
       </section>
 
@@ -457,29 +704,29 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             <h2 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-extrabold text-white mb-6 leading-tight">
               {t('cta_title')}
             </h2>
-            <p className="text-lg sm:text-xl text-white/65 mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.3)]">
               {t('cta_desc')}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <Button
-                  size="lg"
-                  onClick={() => onNavigate('contact')}
-                  className="bg-white text-[#002A5C] hover:bg-white/95 font-bold rounded-2xl px-8 py-4 text-[17px] shadow-2xl transition-all duration-300 cursor-pointer"
-                >
-                  {t('cta_btn')}
+                <Button size="lg" onClick={() => onNavigate('contact')}
+                  className="bg-white text-[#002A5C] hover:bg-white/95 font-bold rounded-2xl px-8 py-4 text-[17px] shadow-2xl transition-all duration-300 cursor-pointer">
+                  {t('cta_btn' as TranslationKey)}
                   <ArrowIcon className="w-5 h-5 ms-2" />
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => onNavigate('services')}
-                  className="glass-strong border-white/20 text-white hover:bg-white/15 font-semibold rounded-2xl px-8 py-4 text-[17px] transition-all duration-300 cursor-pointer"
-                >
-                  {t('cta_btn2')}
+                <Button variant="outline" size="lg"
+                  className="glass-strong border-white/20 text-white hover:bg-white/15 font-semibold rounded-2xl px-8 py-4 text-[17px] transition-all duration-300 cursor-pointer">
+                  {t('cta_btn2' as TranslationKey)}
                 </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                <a href="https://wa.me/212600000000" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl px-8 py-4 text-[17px] shadow-xl shadow-emerald-500/25 hover:shadow-2xl hover:shadow-emerald-500/35 transition-all duration-300">
+                  <MessageCircle className="w-5 h-5" />
+                  {t('cta_wa' as TranslationKey)}
+                </a>
               </motion.div>
             </div>
           </FadeIn>
